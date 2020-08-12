@@ -1,0 +1,3 @@
+ofxAutoReloadedShader
+ofxEasing
+ofxGui
