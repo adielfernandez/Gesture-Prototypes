@@ -47,7 +47,7 @@ void Gui::setup(){
 
 	//Kinect vars
 	gui.add(kinectLabel.setup("   KINECT", ""));
-	gui.add(numSkeletonSmoothing.setup("Num Points to Smooth", 3, 1, 30));
+	gui.add(headHandDistThreshold.setup("Head to Hand Dist Thresh", 0.07, 0.0, 0.5));
 
 
 	//formatting

@@ -1,0 +1,6 @@
+<group>
+	<___BINOCULAR_SETTINGS/>
+	<Bin__Lerp_Speed>0.02</Bin__Lerp_Speed>
+	<___KINECT/>
+	<Head_to_Hand_Dist_Thresh>0.1025</Head_to_Hand_Dist_Thresh>
+</group>

@@ -34,7 +34,7 @@ vec2 invY(vec2 v){
 
 void main(){
 
-    vec2 eyeCenter = uMouse;
+    vec2 eyeCenter = uPosition;
 
     //normalized frag coords
     vec2 normCoord = vec2(gl_FragCoord.x/uResolution.x, gl_FragCoord.y/uResolution.y);

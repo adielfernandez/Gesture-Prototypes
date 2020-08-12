@@ -40,26 +40,64 @@ void ofApp::update(){
 	mKinect.update();
 
 
-	mBinoculars.setShowing(ofGetMousePressed());
-	mBinoculars.update(ofVec2f(ofGetMouseX(), ofGetMouseY()));
-
+	bool bodyFound = false;
+	ofVec2f head, leftHand, rightHand, leftElbow, rightElbow;
 
 	auto bodies = mKinect.getBodySource()->getBodies();
+	for (auto body : bodies) {
 
-
-	bool bodyFound = false;
-
-	for (int i = 0; i < bodies.size(); i++) {
-		if (bodies[i].tracked) {
+		if (body.tracked) {
 			bodyFound = true;
+			for (auto joint : body.joints) {
 
-		}
-		else {
-
-
+				//cout << "First: " << joint.first << ", Second: " << joint.second.getPosition() << endl;
+				if (joint.first == JointType_Head) {
+					head = joint.second.getPositionInWorld();
+				}
+				else if (joint.first == JointType_HandLeft) {
+					leftHand = joint.second.getPositionInWorld();
+				}
+				else if (joint.first == JointType_HandRight) {
+					rightHand = joint.second.getPositionInWorld();
+				}
+				else if (joint.first == JointType_ElbowLeft) {
+					leftElbow = joint.second.getPositionInWorld();
+				}
+				else if (joint.first == JointType_ElbowRight) {
+					rightElbow = joint.second.getPositionInWorld();
+				}
+			}
+			break;
 		}
 	}
 
+
+	bool showBin = false;
+
+	if (bodyFound) {
+
+		float toLeftDistSq = ofDistSquared(head.x, head.y, leftHand.x, leftHand.y);
+		float toRightDistSq = ofDistSquared(head.x, head.y, rightHand.x, rightHand.y);
+
+		//cout << "Left Dist: " << toLeftDistSq << "\t\t" << "Right Dist: " << toRightDistSq << endl;
+
+		float thresh = mGui->headHandDistThreshold;
+		if (toLeftDistSq < thresh && toRightDistSq < thresh) {
+			showBin = true;
+		}
+
+	}
+	else {
+
+	}
+
+	//mBinoculars.setShowing(ofGetMousePressed());
+	//mBinoculars.update(ofVec2f(ofGetMouseX(), ofGetMouseY()));
+
+	ofVec2f binPos = ofGetWindowSize() / 2.0f;
+
+	mBinoculars.setShowing(showBin);
+	mBinoculars.update(binPos);
 
 }
 

@@ -60,7 +60,7 @@ public:
 	//ofxFloatSlider windScaleSlider;
 
 	ofxLabel kinectLabel;
-	ofxIntSlider numSkeletonSmoothing;
+	ofxFloatSlider headHandDistThreshold;
 
 
 
