@@ -1,6 +1,18 @@
 <group>
 	<___BINOCULAR_SETTINGS/>
-	<Bin__Lerp_Speed>0.02</Bin__Lerp_Speed>
+	<Bin__Lerp_Speed>0.065</Bin__Lerp_Speed>
 	<___KINECT/>
 	<Head_to_Hand_Dist_Thresh>0.1025</Head_to_Hand_Dist_Thresh>
+<group/>
+	<Bin__Zoom_Lerp_Speed>0.05</Bin__Zoom_Lerp_Speed>
+	<Bin__Pos_Lerp_Speed>0.04</Bin__Pos_Lerp_Speed>
+	<Bin__Min_Mag>1</Bin__Min_Mag>
+	<Bin__Max_Mag>4</Bin__Max_Mag>
+	<Bin__Left_Body_Angle>1.32</Bin__Left_Body_Angle>
+	<Bin__Right_Body_Angle>2.205</Bin__Right_Body_Angle>
+	<Bin__Left_Pos_X>0.2</Bin__Left_Pos_X>
+	<Bin__Right_Pos_X>0.8</Bin__Right_Pos_X>
+<Bin__Scale>1.4455</Bin__Scale>
+	<Bin__Center_Body_Angle>1.605</Bin__Center_Body_Angle>
+	<Bin__Body_Angle_Dev>0.3975</Bin__Body_Angle_Dev>
 </group>

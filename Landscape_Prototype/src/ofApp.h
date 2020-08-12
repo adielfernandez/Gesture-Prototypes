@@ -10,6 +10,7 @@
 #include "binoculars\BinocularLayer.h"
 
 
+
 class ofApp : public ofBaseApp{
 
 	public:
@@ -44,5 +45,7 @@ class ofApp : public ofBaseApp{
 		void setFakeFullscreen();
 
 		bool bDrawKinect = false;
+
+		float getAngleBetween(ofVec3f a, ofVec3f b);
 
 };

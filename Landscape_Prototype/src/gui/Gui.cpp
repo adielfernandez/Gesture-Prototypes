@@ -18,7 +18,17 @@ void Gui::setup(){
 	guiFileName = guiName + ".xml";
 	gui.setup(guiName, guiFileName);
 	gui.add(binocularLabel.setup("   BINOCULAR SETTINGS", ""));
+	gui.add(binScale.setup("Bin. Scale", 1.0, 0.1, 4.0));
 	gui.add(binocularAlphaLerpSpeed.setup("Bin. Lerp Speed", 0.02, 0.0, 0.2));
+	gui.add(binZoomLerp.setup("Bin. Zoom Lerp Speed", 0.05, 0.0, 0.2));
+	gui.add(binPosLerp.setup("Bin. Pos Lerp Speed", 0.05, 0.0, 0.2));
+	gui.add(binMinMag.setup("Bin. Min Mag", 1.0, 0.0, 2.0));
+	gui.add(binMaxMag.setup("Bin. Max Mag", 4.0, 0.0, 10.0));
+
+	gui.add(binCenterBodyAngle.setup("Bin. Center Body Angle", 1.5, 0.0, 3.0));
+	gui.add(binBodyAngleDev.setup("Bin. Body Angle Dev", 0.5, 0.0, 1.5));
+	gui.add(binLeftBinX.setup("Bin. Left Pos X", 0.2, 0.0, 1.0));
+	gui.add(binRightBinX.setup("Bin. Right Pos X", 0.8, 0.0, 1.0));
 
 	//shader settings
 	//gui.add(shaderLabel.setup("   FOG SHADER", ""));

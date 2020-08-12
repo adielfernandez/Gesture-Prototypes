@@ -5,6 +5,7 @@ uniform float uTime;
 uniform vec2 uMouse;
 uniform vec2 uResolution;
 uniform float uAlpha;
+uniform float uBinScale;
 uniform float uMagnification;
 uniform sampler2DRect tex0;
 
@@ -40,7 +41,7 @@ void main(){
     vec2 normCoord = vec2(gl_FragCoord.x/uResolution.x, gl_FragCoord.y/uResolution.y);
 
     // tie this to float from OF to scale whole thing up/down
-    float bScale = 1.0;
+    float bScale = uBinScale;
 
     // vals in pixels
     float eyeRad = 180.0 * bScale;

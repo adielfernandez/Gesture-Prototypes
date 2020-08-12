@@ -39,9 +39,10 @@ void ofApp::setup(){
 void ofApp::update(){
 	mKinect.update();
 
+	ofVec2f binPos = ofGetWindowSize() / 2.0f;
 
 	bool bodyFound = false;
-	ofVec2f head, leftHand, rightHand, leftElbow, rightElbow;
+	ofVec3f head, leftHand, rightHand, leftElbow, rightElbow;
 
 	auto bodies = mKinect.getBodySource()->getBodies();
 	for (auto body : bodies) {
@@ -84,6 +85,38 @@ void ofApp::update(){
 		float thresh = mGui->headHandDistThreshold;
 		if (toLeftDistSq < thresh && toRightDistSq < thresh) {
 			showBin = true;
+
+			// get 3D vector normal to the plane created by two elbow points and avg of two hands
+			ofVec3f avgHands = (leftHand + rightHand) / 2.0f;
+
+			ofVec3f toLeftElbow = (leftElbow - leftHand).getNormalized();
+			ofVec3f toRightElbow = (rightElbow - rightHand).getNormalized();
+
+
+			// Cross product doesn't work for some reason
+			//ofVec3f planeNormal = toLeftElbow.getCrossed(toRightElbow);
+			
+
+
+			// ZOOM
+			float zoomAngle = getAngleBetween(toLeftElbow, toRightElbow);
+			float mag = ofClamp(ofMap(zoomAngle, 1.7, 0.3, mGui->binMinMag, mGui->binMaxMag), mGui->binMinMag, mGui->binMaxMag);
+			mBinoculars.setMagnification(mag);
+			//cout << "To Left: " << toLeftElbow << "\t\t" << "To Right: " << toRightElbow << "\t\t" << "Angle: " << angle << endl;
+
+			// ORIENTATION
+			// get vector between elbows in XZ plane and find angle between -Z vector
+			ofVec3f leftElbowToRight = (rightElbow - leftElbow).getNormalized();
+
+			float orientAngle = getAngleBetween(leftElbowToRight, ofVec3f(0, 0, -1));
+			cout << "Orientation Angle: " << orientAngle << endl;
+
+			float leftAngle = mGui->binCenterBodyAngle - mGui->binBodyAngleDev;
+			float rightAngle = mGui->binCenterBodyAngle + mGui->binBodyAngleDev;
+			float xPos = ofMap(orientAngle, leftAngle, rightAngle, mGui->binLeftBinX, mGui->binRightBinX) * ofGetWidth();
+			
+			binPos.x = xPos;
+
 		}
 
 	}
@@ -94,11 +127,15 @@ void ofApp::update(){
 	//mBinoculars.setShowing(ofGetMousePressed());
 	//mBinoculars.update(ofVec2f(ofGetMouseX(), ofGetMouseY()));
 
-	ofVec2f binPos = ofGetWindowSize() / 2.0f;
+
 
 	mBinoculars.setShowing(showBin);
 	mBinoculars.update(binPos);
 
+}
+
+float ofApp::getAngleBetween(ofVec3f a, ofVec3f b) {
+	return acos(a.dot(b) / (a.length() * b.length()));
 }
 
 //--------------------------------------------------------------

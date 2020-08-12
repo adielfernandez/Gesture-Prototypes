@@ -13,7 +13,11 @@ void BinocularLayer::setup() {
 }
 
 void BinocularLayer::update(ofVec2f position) {
-	mPosition = position;
+	
+	mPosition.x = ofLerp(mPosition.x, position.x, mGui->binPosLerp);
+	mPosition.y = position.y;
+
+
 
 	float lerpSpeed = mGui->binocularAlphaLerpSpeed;
 
@@ -23,6 +27,10 @@ void BinocularLayer::update(ofVec2f position) {
 		mAlpha = ofLerp(mAlpha, 0.0f, lerpSpeed);
 	}
 	//cout << "Alpha: " << mAlpha << endl;
+
+
+	mMagnification = ofLerp(mMagnification, mMagTarget, mGui->binZoomLerp);
+
 }
 
 void BinocularLayer::setShowing(bool show) {
@@ -32,7 +40,6 @@ void BinocularLayer::setShowing(bool show) {
 	bShouldShow = show;
 
 }
-
 
 void BinocularLayer::draw() {
 
@@ -51,6 +58,7 @@ void BinocularLayer::draw() {
 		shader.setUniform2f("uResolution", ofGetWidth(), ofGetHeight());
 		shader.setUniform1f("uMagnification", mMagnification);
 		shader.setUniform1f("uAlpha", mAlpha);
+		shader.setUniform1f("uBinScale", mGui->binScale);
 		//shader.setUniformTexture("uImageTex", mBgTex, 0);
 		//shader.setUniform1f("fogLayers", gui->fogLayers);
 		//shader.setUniform1f("driftSpeed", gui->driftSpeed);

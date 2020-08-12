@@ -18,13 +18,14 @@ public:
 	void setShowing(bool show);
 	void setGui(shared_ptr<Gui> gui) { mGui = gui; }
 
+	void setMagnification(float mag) { mMagTarget = mag; }
 
 private:
 
 	ofxAutoReloadedShader shader;
 
 
-	ofVec2f mPosition;
+	ofVec2f mPosition, mTargetPos;
 
 	shared_ptr<Gui> mGui;
 
@@ -37,5 +38,7 @@ private:
 
 	float mTargetAlpha;
 	float mChangeTime = 0;
+
+	float mMagTarget = 1.0f;
 
 };

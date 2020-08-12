@@ -23,8 +23,18 @@ public:
 	ofxPanel gui;
 	ofxLabel binocularLabel;
 	ofxFloatSlider binocularAlphaLerpSpeed;
-	ofxFloatSlider bgFadeTime;
-	ofxFloatSlider bgDuration;
+	ofxFloatSlider binZoomLerp;
+	ofxFloatSlider binPosLerp;
+
+	ofxFloatSlider binMinMag;
+	ofxFloatSlider binMaxMag;
+
+	ofxFloatSlider binCenterBodyAngle;
+	ofxFloatSlider binBodyAngleDev;
+	ofxFloatSlider binLeftBinX;
+	ofxFloatSlider binRightBinX;
+
+	ofxFloatSlider binScale;
 
 	//ofxLabel shaderLabel;
 	//ofxIntSlider fogLayers;
