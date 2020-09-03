@@ -1,0 +1,13 @@
+<group>
+	<HIDDEN>
+		<CalibrationPoint0>3.05176e-05, 0, 0</CalibrationPoint0>
+		<CalibrationPoint1>925.994, -18.9808, 0</CalibrationPoint1>
+		<CalibrationPoint2>975.254, 940.579, -49.7339</CalibrationPoint2>
+		<CalibrationPoint3>26.4927, 993.014, 0</CalibrationPoint3>
+	<CalibrationMatrixRow0>-0.996701, 0.0241041, -0.0775014, 0</CalibrationMatrixRow0>
+		<CalibrationMatrixRow1>-0.0672911, -0.77931, 0.623015, 0</CalibrationMatrixRow1>
+		<CalibrationMatrixRow2>-0.0453804, 0.626175, 0.778361, 0</CalibrationMatrixRow2>
+		<CalibrationMatrixRow3>371.002, -1198.42, -2997.88, 1</CalibrationMatrixRow3>
+	</HIDDEN>
+<group/>
+</group>

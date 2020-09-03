@@ -1,0 +1,61 @@
+<group>
+	<MESH_ALIGNMENT>
+	<Point_Size>7</Point_Size>
+		<Point_Picker_Rad>69.6837</Point_Picker_Rad>
+		<Ground_Plane_Quaternion>0.295405, 0.0414635, 0, 0.954472</Ground_Plane_Quaternion>
+		<Translation_vector>-296.114, -1069.74, -2992.63</Translation_vector>
+		<Z_Rotation>-3.13285</Z_Rotation>
+		<Z_plane_cutoff>-496.174</Z_plane_cutoff>
+		<Show_Ground_Plane>1</Show_Ground_Plane>
+		<Remove_floor>1</Remove_floor>
+	</MESH_ALIGNMENT>
+<group/>
+	<____MESH_ALIGNMENT/>
+<____PERSPECTIVE_VIEWS/>
+	<PERSPECTIVE_VIEWS>
+		<Render_Top_View>1</Render_Top_View>
+		<Top_Cam_Pos>677.166, 1607.14, -13113.3</Top_Cam_Pos>
+		<Top_Point_Size>4</Top_Point_Size>
+		<Top_Near_Limit>-1530.61</Top_Near_Limit>
+		<Top_Far_Limit>5.10196</Top_Far_Limit>
+	<Fbo_Clear_Rate>1</Fbo_Clear_Rate>
+	<Top_Scene_Width>4032</Top_Scene_Width>
+		<Top_Near_Mapping_Limit>-1367.35</Top_Near_Mapping_Limit>
+		<Top_Far_Mapping_Limit>20.4082</Top_Far_Mapping_Limit>
+	</PERSPECTIVE_VIEWS>
+<____VISION/>
+	<VISION>
+		<Blur_Amount>0</Blur_Amount>
+	<Num_Erosions>1</Num_Erosions>
+		<Num_Dilations>0</Num_Dilations>
+		<Use_BG_Learning>1</Use_BG_Learning>
+		<Reset_Background>0</Reset_Background>
+		<BG_Learn_Time>5459</BG_Learn_Time>
+		<Threshold>65</Threshold>
+		<Min_Blob_Area>357</Min_Blob_Area>
+		<Max_Blob_Area>42857</Max_Blob_Area>
+		<Blob_Persistence>44</Blob_Persistence>
+		<Max_Blob_Travel_Dist>50</Max_Blob_Travel_Dist>
+	<Near_Clip>1193</Near_Clip>
+		<Far_Clip>2410</Far_Clip>
+	</VISION>
+<____MASKING/>
+	<MASKING>
+		<Use_Mask>1</Use_Mask>
+		<Clear_Mask>0</Clear_Mask>
+		<Draw_or_Erase>1</Draw_or_Erase>
+		<Mask_Tool_Size>50</Mask_Tool_Size>
+	</MASKING>
+<____TRACKING/>
+	<TRACKING>
+		<Position_Smoothing_Amt>10</Position_Smoothing_Amt>
+	<Velocity_Clamp>3</Velocity_Clamp>
+		<Stillness_Threshold>0.273005</Stillness_Threshold>
+		<Vel_draw_Scale>68.8784</Vel_draw_Scale>
+	<Velocity_Smoothing_Amt>10</Velocity_Smoothing_Amt>
+	</TRACKING>
+<____UDP_SENDER/>
+	<UDP_SENDER>
+		<Log_JSON_to_Console>0</Log_JSON_to_Console>
+	</UDP_SENDER>
+</group>

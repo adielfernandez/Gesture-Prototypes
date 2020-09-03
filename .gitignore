@@ -30,6 +30,9 @@ xcuserdata
 *.suo
 ipch/
  *.opendb
+*.db
+*.vc.db
+
 
 #Eclipse
 .metadata
