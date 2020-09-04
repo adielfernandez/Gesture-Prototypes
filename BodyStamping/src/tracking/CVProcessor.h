@@ -16,19 +16,20 @@ public:
 
 	void setup(int width, int height);
 	void update();
-	void process(ofPixels &pix);
-	void process(ofShortPixels &pix);
+	void processDepth(ofPixels &pix);
+	void processDepth(ofShortPixels &pix);
 
 	// for processing short pixels to 8 bit ofPixels
 	void updateDepthLookupTable();
 
 	void drawRawMapped(int x, int y, int w, int h);
-	void drawBlurred(int x, int y, int w, int h);
-	void drawBackground(int x, int y, int w, int h);
-	void drawForeground(int x, int y, int w, int h);
-	
-	void drawContours();
-	
+	void drawThresholdedAndBlurred(int x, int y, int w, int h);
+	void drawAccumulated(int x, int y, int w, int h);
+
+	void setRecording(bool record);
+	bool isRecording() { return bRecording;  }
+
+	ofImage & getAccumulatedImg() { return mAccumulatedImg; }
 
 private:
 
@@ -41,26 +42,29 @@ private:
 	ofParameter<int>	mNumErosions;
 	ofParameter<int>	mNumDilations;
 	ofParameter<int>	mThreshold;
-	ofParameter<int>	mMinBlobArea;
-	ofParameter<int>	mMaxBlobArea;
-	ofParameter<int>	mPersistence;
-	ofParameter<int>	mMaxBlobDist;
 
 	ofParameter<short>	mNearClip;
 	ofParameter<short>	mFarClip;
+
+	ofParameter<int>	mDecay;
 	
 	// CV containers
 	ofxCv::ContourFinder		mContours;
 	ofImage						mRawImg;
 	ofImage						mBlurredImg;
 	ofImage						mThreshImg;
-	ofImage						mForegroundImg;
-	ofImage						mBackgroundImg;
+
+	ofImage						mAccumulatedImg;
+
+	ofPixels					mDecayPix;
 
 	const short MAX_DEPTH = 4500;
 	std::vector<char> depthLookupTable;
 
 	unsigned short mPrevFarClip;
 	unsigned short mNearFarClip;
+	int mPrevDecay = 0;
+
+	bool bRecording = false;
 
 };

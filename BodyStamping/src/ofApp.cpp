@@ -23,11 +23,13 @@ void ofApp::setup(){
 	SharedGui::get()->setPosition(10, 80);
 	SharedGui::get()->setColor(ofColor(0, 160, 255));
 
+	SharedGui::get()->getGroup("UX")->add(mBreakPlaneDist.set("Break Plane Dist", 1.5, 0, 4));
+
 
 	mCV.setup(depthW, depthH);
 
-
-
+	mGestureIsolator.setup(depthW, depthH);
+	mCanvas.setup(depthW, depthH);
 
 	// Call this after other classes have added all their params
 	SharedGui::get()->finishSetup();
@@ -39,6 +41,19 @@ void ofApp::setup(){
 	bIsFullscreen = false;
 
 
+	// create color palette
+	int num = 10;
+	for (int i = 0; i < num; i++) {
+
+		float pct = i / (float)num;
+		ofColor c;
+		c.setHsb(ofRandom(pct * 255), 128, 255, 255);
+
+		mColors.push_back(c);
+	}
+
+	std::random_shuffle(mColors.begin(), mColors.end());
+
 }
 
 //--------------------------------------------------------------
@@ -48,22 +63,88 @@ void ofApp::update(){
 	mCV.update();
 
 	if (mKinect.getDepthSource()->isFrameNew()) {
-		mCV.process(mKinect.getDepthSource()->getPixels());
+		mCV.processDepth(mKinect.getDepthSource()->getPixels());
 	}
 
+	mGestureIsolator.isolate(mCV.getAccumulatedImg(), getCurrentColor());
+
+	// Look for hands crossing the break plane
+	bool bodyFound = false;
+	ofVec3f head, leftHand, rightHand, leftElbow, rightElbow;
+
+	auto bodies = mKinect.getBodySource()->getBodies();
+	for (auto body : bodies) {
+
+		if (body.tracked) {
+			bodyFound = true;
+			for (auto joint : body.joints) {
+
+				//cout << "First: " << joint.first << ", Second: " << joint.second.getPosition() << endl;
+				if (joint.first == JointType_Head) {
+					head = joint.second.getPositionInWorld();
+				}
+				else if (joint.first == JointType_HandLeft) {
+					leftHand = joint.second.getPositionInWorld();
+				}
+				else if (joint.first == JointType_HandRight) {
+					rightHand = joint.second.getPositionInWorld();
+				}
+				else if (joint.first == JointType_ElbowLeft) {
+					leftElbow = joint.second.getPositionInWorld();
+				}
+				else if (joint.first == JointType_ElbowRight) {
+					rightElbow = joint.second.getPositionInWorld();
+				}
+			}
+			break;
+		}
+	}
+
+
+	if (bodyFound && (rightHand.z < mBreakPlaneDist || leftHand.z < mBreakPlaneDist || head.z < mBreakPlaneDist)) {
+		mCV.setRecording(true);
+		bUserPresent = true;
+	} else {
+
+		if (bUserPresent) {
+			// first frame with no user, change the color, 
+			// grab the current gesture pixels and draw them
+			mCanvas.add(mGestureIsolator.getFbo().getTexture(), getCurrentColor());
+			getNextColor();
+
+			bUserPresent = false;
+		}
+
+		mCV.setRecording(false);
+
+	}
+
+	mCanvas.update();
 
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-	ofBackgroundGradient(ofColor(50), ofColor(0));
-
-	ofPushMatrix();
+	ofBackgroundGradient(ofColor(40), ofColor(0));
 
 
-	ofPopMatrix();
-
+	// ----- draw gesture and canvas side by side ----- 
+	//ofVec2f size(depthW, depthH);
+	//size *= 1.0;
+	//ofVec2f pos = ofGetWindowSize() / 2.0f - ofVec2f(size.x, size.y / 2.0f);
+	//ofSetColor(getCurrentColor());
+	//mGestureIsolator.getFbo().draw(pos, size.x, size.y);
+	//ofSetColor(255);
+	//mCanvas.getFbo().draw(pos + ofVec2f(size.x, 0), size.x, size.y);
+	
+	// ----- draw gesture and canvas overlayed -----
+	ofVec2f size(depthW, depthH);
+	size *= 2.5;
+	ofVec2f pos = ofGetWindowSize() / 2.0f - size / 2.0f;
+	ofSetColor(255);
+	mCanvas.getFbo().draw(pos, size.x, size.y);
+	mGestureIsolator.getFbo().draw(pos, size.x, size.y);
 
 
 	if (bDrawKinect) {
@@ -72,8 +153,10 @@ void ofApp::draw(){
 		float top = 20;
 		KinectUtils::drawDebugView(&mKinect, left, top);
 
-		mCV.drawRawMapped(left, top + depthH + 60, depthW, depthH);
-		mCV.drawBlurred(left + depthW, top + depthH + 60, depthW, depthH);
+		float yGap = 60;
+		mCV.drawRawMapped(left, top + depthH + yGap, depthW, depthH);
+		mCV.drawThresholdedAndBlurred(left + depthW, top + depthH + yGap, depthW, depthH);
+		mCV.drawAccumulated(left + depthW * 2, top + depthH + yGap, depthW, depthH);
 	}
 
 
@@ -85,6 +168,11 @@ void ofApp::draw(){
 		SharedGui::get()->draw();
 	}
 
+	if (mCV.isRecording()) {
+		//ofSetColor(255, 0, 0);
+		//ofRect(ofGetWidth() - 50, 0, 50, 50);
+	}
+
 }
 
 
@@ -93,6 +181,11 @@ void ofApp::setFakeFullscreen() {
 	ofSetWindowShape(ofGetScreenWidth() + 1, ofGetScreenHeight() + 1);
 }
 
+ofColor ofApp::getNextColor() {
+	colorIdx++;
+	if (colorIdx >= mColors.size()) colorIdx = 0;
+	return getCurrentColor();
+}
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -116,6 +209,8 @@ void ofApp::keyPressed(int key){
 	if (key == 's') SharedGui::get()->save();
 	if (key == 'l') SharedGui::get()->load();
 	if (key == 'g') bShowGui = !bShowGui;
+
+	if (key == ' ') mCanvas.clear();
 
 }
 

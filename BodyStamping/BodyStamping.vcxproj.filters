@@ -106,6 +106,12 @@
     <ClCompile Include="src\tracking\CVProcessor.cpp">
       <Filter>src\tracking</Filter>
     </ClCompile>
+    <ClCompile Include="src\visuals\GestureIsolator.cpp">
+      <Filter>src\visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\visuals\Canvas.cpp">
+      <Filter>src\visuals</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -260,6 +266,9 @@
     </Filter>
     <Filter Include="src\tracking">
       <UniqueIdentifier>{272f1770-98dd-422b-8b24-1b83dac792b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\visuals">
+      <UniqueIdentifier>{1ef2a2f0-cabc-46cb-a104-cf74adc3a02d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -871,6 +880,12 @@
     </ClInclude>
     <ClInclude Include="src\tracking\CVProcessor.h">
       <Filter>src\tracking</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visuals\GestureIsolator.h">
+      <Filter>src\visuals</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visuals\Canvas.h">
+      <Filter>src\visuals</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

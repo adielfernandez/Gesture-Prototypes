@@ -31,13 +31,14 @@
 		<Use_BG_Learning>1</Use_BG_Learning>
 		<Reset_Background>0</Reset_Background>
 		<BG_Learn_Time>5459</BG_Learn_Time>
-		<Threshold>65</Threshold>
+		<Threshold>225</Threshold>
 		<Min_Blob_Area>357</Min_Blob_Area>
 		<Max_Blob_Area>42857</Max_Blob_Area>
 		<Blob_Persistence>44</Blob_Persistence>
 		<Max_Blob_Travel_Dist>50</Max_Blob_Travel_Dist>
 	<Near_Clip>1193</Near_Clip>
 		<Far_Clip>2410</Far_Clip>
+	<Decaay>1</Decaay>
 	</VISION>
 <____MASKING/>
 	<MASKING>
@@ -58,4 +59,13 @@
 	<UDP_SENDER>
 		<Log_JSON_to_Console>0</Log_JSON_to_Console>
 	</UDP_SENDER>
+<____UX/>
+	<UX>
+		<Break_Plane_Dist>1.5</Break_Plane_Dist>
+	</UX>
+	<____KINECT/>
+	<KINECT>
+		<Near_Clip>1125</Near_Clip>
+		<Far_Clip>2479</Far_Clip>
+	</KINECT>
 </group>

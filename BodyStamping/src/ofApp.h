@@ -8,6 +8,8 @@
 #include "gui/SharedGui.h"
 #include "gui/FontManager.h"
 #include "tracking/CVProcessor.h"
+#include "visuals/GestureIsolator.h"
+#include "visuals/Canvas.h"
 
 class ofApp : public ofBaseApp{
 
@@ -34,6 +36,8 @@ class ofApp : public ofBaseApp{
 		const int depthH = 424;
 
 		CVProcessor mCV;
+		GestureIsolator mGestureIsolator;
+		Canvas mCanvas;
 
 		bool bShowGui;
 
@@ -41,6 +45,15 @@ class ofApp : public ofBaseApp{
 		void setFakeFullscreen();
 
 		bool bDrawKinect = false;
-		
 
+		ofParameter<float>	mBreakPlaneDist;
+
+		bool bUserPresent = false;
+
+		
+		std::vector<ofColor> mColors;
+		int colorIdx = 0;
+
+		ofColor getNextColor();
+		ofColor getCurrentColor() { return mColors[colorIdx]; }
 };
