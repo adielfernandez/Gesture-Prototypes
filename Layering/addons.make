@@ -1,0 +1,5 @@
+ofxAutoReloadedShader
+ofxCv
+ofxEasing
+ofxGui
+ofxOpenCv
