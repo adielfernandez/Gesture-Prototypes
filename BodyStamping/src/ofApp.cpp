@@ -160,13 +160,6 @@ void ofApp::draw(){
 	}
 
 
-	if (bShowGui) {
-
-		ofSetColor(255);
-		ofDrawBitmapString("Framerate: " + ofToString(ofGetFrameRate(), 2), 10, 20);
-
-		SharedGui::get()->draw();
-	}
 
 	if (mCV.isRecording()) {
 		//ofSetColor(255, 0, 0);

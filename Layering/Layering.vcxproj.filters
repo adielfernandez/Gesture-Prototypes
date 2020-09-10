@@ -106,7 +106,10 @@
     <ClCompile Include="src\tracking\CVProcessor.cpp">
       <Filter>src\utils</Filter>
     </ClCompile>
-    <ClCompile Include="src\visuals\MeshGenerator.cpp">
+    <ClCompile Include="src\visuals\Axes.cpp">
+      <Filter>src\visuals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\visuals\MeshController.cpp">
       <Filter>src\visuals</Filter>
     </ClCompile>
   </ItemGroup>
@@ -881,7 +884,10 @@
     <ClInclude Include="src\utils\Math.h">
       <Filter>src\tracking</Filter>
     </ClInclude>
-    <ClInclude Include="src\visuals\MeshGenerator.h">
+    <ClInclude Include="src\visuals\Axes.h">
+      <Filter>src\visuals</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visuals\MeshController.h">
       <Filter>src\visuals</Filter>
     </ClInclude>
   </ItemGroup>

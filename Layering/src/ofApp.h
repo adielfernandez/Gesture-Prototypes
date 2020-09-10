@@ -1,6 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
+#include "visuals\Axes.h"
+#include "gui/SharedGui.h"
+#include "gui/FontManager.h"
+#include "visuals/MeshController.h"
 
 class ofApp : public ofBaseApp{
 
@@ -21,24 +25,18 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
-    //Our mesh objects
-    ofMesh mesh;
-    ofMesh originalMesh;
-    
-        
-    bool bWire;
-    
+	Axes mAxes;
+
+	MeshController mMeshController;
+
     ofEasyCam cam;
-    ofImage img;
+	ofLight light;
+	ofMaterial material;
 
-	float getValFromImg(int x, int y);
-	float getHeightForVal(float val);
+	bool bShowGui = true;
 
-	//XYZ Axis Arrows
-	void drawAxes();
+
 	float getBillboardAngle(ofVec3f globalPos);
 	ofVec3f getBillboardVec(ofVec3f globalPos);
-	ofConePrimitive coneX;
-	ofConePrimitive coneY;
-	ofConePrimitive coneZ;
+
 };
