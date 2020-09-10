@@ -190,12 +190,12 @@ static ofVec2f getIntersectionPoint(ofVec2f line1Start, ofVec2f line1End, ofVec2
 }
 
 
-//returns a position "offscreenMargin" pixels PAST the edge of the screen
+//returns a position on the edge of the rect
 //in the given direction FROM THE CENTER of the rect
-static ofVec2f getOffScreenPosition(ofVec2f dir, ofVec2f screenSize, float offScreenMargin = 0.0f) {
+static ofVec2f getRectIntersection(ofVec2f dir, ofVec2f rectSize) {
 
-	float w = screenSize.x;
-	float h = screenSize.y;
+	float w = rectSize.x;
+	float h = rectSize.y;
 
 	dir.normalize();
 
@@ -230,11 +230,19 @@ static ofVec2f getOffScreenPosition(ofVec2f dir, ofVec2f screenSize, float offSc
 		toEdge = getIntersectionPoint(ofVec2f(0), dir, vert3, vert0, hasIntersection);
 	}
 
-	toEdge += dir * ofVec2f(offScreenMargin);
-
 	//Shift the position so it isn't centered around the origin
-	toEdge += ofVec2f(w / 2, h / 2);
+	//toEdge += ofVec2f(w / 2, h / 2);
 
 	return toEdge;
 
+}
+
+
+// return value will be positive if test point is on same side of plane as normal points
+// negative if on opposite side, zero if on the plane.
+// plane defined by normal and position of normal (must be normalized)
+static float checkWhichSideOfPlane(ofVec3f pt, ofVec3f planeNomral, ofVec3f planePos) {
+	// first get vector from plane to testPt
+	ofVec3f planeToPt = pt - planePos;
+	return planeToPt.dot(planeNomral);
 }

@@ -4,19 +4,22 @@
 
 Axes::Axes() {
 
+	float rad = 5;
+	float height = 30;
+
 	//set up the heads of the axis cones
-	coneX.setRadius(15);
-	coneX.setHeight(45);
+	coneX.setRadius(rad);
+	coneX.setHeight(height);
 	coneX.setResolution(8, 1, 0);
 	coneX.setTopColor(ofColor(255, 0, 0));
 
-	coneY.setRadius(15);
-	coneY.setHeight(45);
+	coneY.setRadius(rad);
+	coneY.setHeight(height);
 	coneY.setResolution(8, 1, 0);
 	coneY.setTopColor(ofColor(0, 255, 0));
 
-	coneZ.setRadius(15);
-	coneZ.setHeight(45);
+	coneZ.setRadius(rad);
+	coneZ.setHeight(height);
 	coneZ.setResolution(8, 1, 0);
 	coneZ.setTopColor(ofColor(0, 0, 255));
 
@@ -24,9 +27,11 @@ Axes::Axes() {
 
 void Axes::drawAxes() {
 
+	ofVec3f axisLengths = ofVec3f(50);
 
-	ofVec3f axisLengths = ofVec3f(100, 100, 100);
-
+	ofPushMatrix();
+	ofTranslate(0, 0, 300);
+	
 
 	ofSetLineWidth(2);
 
@@ -66,6 +71,8 @@ void Axes::drawAxes() {
 	ofRotate(-90, 1, 0, 0);
 
 	coneZ.draw();
+
+	ofPopMatrix();
 
 	ofPopMatrix();
 

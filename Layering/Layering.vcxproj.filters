@@ -103,9 +103,6 @@
     <ClCompile Include="src\kinect\KinectUtils.cpp">
       <Filter>src\kinect</Filter>
     </ClCompile>
-    <ClCompile Include="src\tracking\CVProcessor.cpp">
-      <Filter>src\utils</Filter>
-    </ClCompile>
     <ClCompile Include="src\visuals\Axes.cpp">
       <Filter>src\visuals</Filter>
     </ClCompile>
@@ -875,20 +872,17 @@
     <ClInclude Include="src\kinect\KinectUtils.h">
       <Filter>src\kinect</Filter>
     </ClInclude>
-    <ClInclude Include="src\tracking\CVProcessor.h">
-      <Filter>src\utils</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\SmoothedVec2.h">
-      <Filter>src\tracking</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils\Math.h">
-      <Filter>src\tracking</Filter>
-    </ClInclude>
     <ClInclude Include="src\visuals\Axes.h">
       <Filter>src\visuals</Filter>
     </ClInclude>
     <ClInclude Include="src\visuals\MeshController.h">
       <Filter>src\visuals</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\SmoothedVec2.h">
+      <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\Math.h">
+      <Filter>src\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

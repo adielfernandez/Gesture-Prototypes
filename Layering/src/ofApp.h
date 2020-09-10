@@ -39,4 +39,8 @@ class ofApp : public ofBaseApp{
 	float getBillboardAngle(ofVec3f globalPos);
 	ofVec3f getBillboardVec(ofVec3f globalPos);
 
+	// reveal plane
+	ofVec3f pNormal;
+	ofVec3f pPos;
+
 };

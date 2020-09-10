@@ -209,7 +209,6 @@
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvHaarFinder.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvImage.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp" />
-    <ClCompile Include="src\tracking\CVProcessor.cpp" />
     <ClCompile Include="src\visuals\Axes.cpp" />
     <ClCompile Include="src\visuals\MeshController.cpp" />
   </ItemGroup>
@@ -415,7 +414,6 @@
     <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab\optical_flow.hpp" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab\stabilizer.hpp" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab\videostab.hpp" />
-    <ClInclude Include="src\tracking\CVProcessor.h" />
     <ClInclude Include="src\utils\Math.h" />
     <ClInclude Include="src\utils\SmoothedVec2.h" />
     <ClInclude Include="src\visuals\Axes.h" />

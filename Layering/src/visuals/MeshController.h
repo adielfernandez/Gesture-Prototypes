@@ -4,6 +4,7 @@
 #include "../gui/SharedGui.h"
 #include "../gui/FontManager.h"
 #include "ofxAutoReloadedShader.h"
+#include "../utils/Math.h"
 
 
 class MeshController {
@@ -16,7 +17,9 @@ public:
 	void setup();
 	void update();
 
-	void creatMesh(std::string imagePath = "images/everest.png");
+	void createMesh();
+
+	void setClippingPlane(ofVec3f pos, ofVec3f norm) { pPos = pos; pNormal = norm; }
 
 	void draw();
 
@@ -25,6 +28,8 @@ public:
 private:
 
 	ofImage mDepthImg;
+	ofImage mColorPalette;
+	ofImage mSampleTex;
 
 	ofVboMesh mTopMesh;
 	ofVboMesh mTopMeshOriginal;
@@ -35,8 +40,7 @@ private:
 	ofVboMesh mLeftMesh;
 	ofVboMesh mRightMesh;
 
-	const int resX = 200;
-	const int resY = 160;
+	ofVboMesh mCrossSection;
 
 	// overall XY size of mesh
 	ofVec2f mMeshSize;
@@ -48,13 +52,33 @@ private:
 
 	float getGrayValFromImg(int x, int y);
 	float getHeightForVal(float val);
+	ofFloatColor getColorForHeight(float height);
 
-
+	ofParameter<float>	mPctWaterLevel;
 	ofParameter<float>	mMaxHeight;
 	ofParameter<float>	mBottomZ;
+	ofParameter<int>	mCrossSamples;
+	ofParameter<int>	mResX;
+	ofParameter<int>	mResY;
+	ofParameter<bool>	bResetMesh;
+	ofParameter<bool>	bShouldCrossSection;
+	float				mButtonPressTime = 0;
+	bool bLastShouldCrossSection = false;
 
 	bool bWireframe = false;
 
 	int getTotalVerts();
+
+	// reveal plane
+	ofVec3f pNormal;
+	ofVec3f pPos;
+	
+	// returns the pixel coordinate for sampling an image
+	// based on where the mesh/space it is
+	ofVec2f getImgCoord(ofVec3f pos);
+
+
+	float mMinImgDepthVal;
+	float mMaxImgDepthVal;
 
 };

@@ -68,4 +68,15 @@
 		<Near_Clip>1125</Near_Clip>
 		<Far_Clip>2479</Far_Clip>
 	</KINECT>
+<____MESH/>
+	<MESH>
+		<Max_Terrain_Height>85.7143</Max_Terrain_Height>
+		<Bottom_Depth>-163.265</Bottom_Depth>
+	<Cross_Section_Samples>100</Cross_Section_Samples>
+	<Resolution_X>371</Resolution_X>
+		<Resolution_Y>277</Resolution_Y>
+		<Reset_Mesh>0</Reset_Mesh>
+		<Perform_Cross_Section>0</Perform_Cross_Section>
+		<Water_Level_Pct>0.178571</Water_Level_Pct>
+	</MESH>
 </group>

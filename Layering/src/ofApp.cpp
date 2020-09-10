@@ -32,17 +32,31 @@ void ofApp::setup(){
 
 
 	mMeshController.setup();
-	mMeshController.creatMesh();
-
 
 	SharedGui::get()->finishSetup();
+
+	mMeshController.createMesh();
+
+
+	// start plane
+	pNormal = ofVec3f(1, 0, 0);
+	pNormal.normalize();
+
+	pPos.set(0);
+
 }
 
 
 //--------------------------------------------------------------
 void ofApp::update(){
     
+	// map plane to mouse pos
+	float angle = ofMap(ofGetMouseX(), 0, ofGetWindowWidth(), -180, 180);
 
+	ofVec3f rotatedNorm = pNormal.getRotated(angle, ofVec3f(0,0,1));
+
+
+	mMeshController.setClippingPlane(pPos, rotatedNorm);
 	mMeshController.update();
 
 }
