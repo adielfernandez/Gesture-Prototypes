@@ -19,11 +19,13 @@ public:
 
 	void createMesh();
 
-	void setClippingPlane(ofVec3f pos, ofVec3f norm) { pPos = pos; pNormal = norm; }
+	void setClippingPlane(ofVec3f pos, ofVec3f norm) { planePos = pos; planeNormal = norm; }
 
 	void draw();
 
 	void toggleWireframe() { bWireframe = !bWireframe; }
+
+	ofVec2f getMeshSizeXY() { return mMeshSize; }
 
 private:
 
@@ -70,8 +72,8 @@ private:
 	int getTotalVerts();
 
 	// reveal plane
-	ofVec3f pNormal;
-	ofVec3f pPos;
+	ofVec3f planeNormal;
+	ofVec3f planePos;
 	
 	// returns the pixel coordinate for sampling an image
 	// based on where the mesh/space it is

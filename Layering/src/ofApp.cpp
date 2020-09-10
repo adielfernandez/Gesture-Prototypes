@@ -55,7 +55,7 @@ void ofApp::update(){
 
 	ofVec3f rotatedNorm = pNormal.getRotated(angle, ofVec3f(0,0,1));
 
-
+	pPos.x = mMeshController.getMeshSizeXY().x * 0.25f;
 	mMeshController.setClippingPlane(pPos, rotatedNorm);
 	mMeshController.update();
 

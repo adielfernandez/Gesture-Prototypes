@@ -191,24 +191,25 @@ static ofVec2f getIntersectionPoint(ofVec2f line1Start, ofVec2f line1End, ofVec2
 
 
 //returns a position on the edge of the rect
-//in the given direction FROM THE CENTER of the rect
-static ofVec2f getRectIntersection(ofVec2f dir, ofVec2f rectSize) {
+//in the given direction position specified within the rect
+// ----- NOTE: ASSUMES RECT IS CENTERED AT ORIGIN
+// ----- NOTE: DOES NOT CHECK THAT POINT IS WITHIN RECT
+static ofVec2f getRectIntersection(ofVec2f dir, ofVec2f pos, ofVec2f rectSize) {
 
 	float w = rectSize.x;
 	float h = rectSize.y;
 
 	dir.normalize();
 
-	//use the angle of the origin to the first vertex of the rect to 	
-	//figure out which side of the rect to use to test for intersection
-	ofVec2f vert0 = ofVec2f(w / 2, -h / 2);
-	ofVec2f vert1 = ofVec2f(w / 2, h / 2);
-	ofVec2f vert2 = ofVec2f(-w / 2, h / 2);
-	ofVec2f vert3 = ofVec2f(-w / 2, -h / 2);
+	// get vectors from declared point to vertices
+	ofVec2f vert0 = ofVec2f(w / 2, -h / 2) - pos;
+	ofVec2f vert1 = ofVec2f(w / 2, h / 2) - pos;
+	ofVec2f vert2 = ofVec2f(-w / 2, h / 2) - pos;
+	ofVec2f vert3 = ofVec2f(-w / 2, -h / 2) - pos;
 
 	//zeroth vertex is 0.0f, the starting point
 	float vert1Angle = getAngleBetween(vert0, vert1, true); //angle from first vert to second
-	float vert2Angle = PI; //angle from first vert to third
+	float vert2Angle = getAngleBetween(vert0, vert2, true); //angle from first vert to third
 	float vert3Angle = getAngleBetween(vert0, vert3, true); //angle from first vert to fourth
 
 	float angle = getAngleBetween(vert0, dir, true);

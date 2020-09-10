@@ -196,7 +196,7 @@ void MeshController::update() {
 
 		for (int i = 0; i < mTopMesh.getNumVertices(); i++) {
 			auto pos = mTopMesh.getVertex(i);
-			if (checkWhichSideOfPlane(pos, pNormal, pPos) > 0) {
+			if (checkWhichSideOfPlane(pos, planeNormal, planePos) > 0) {
 				mTopMesh.setColor(i, boxClear);
 			}
 			else {
@@ -212,32 +212,32 @@ void MeshController::update() {
 
 		for (int i = 0; i < mFrontMesh.getNumVertices(); i++) {
 			auto pos = mFrontMesh.getVertex(i);
-			if (checkWhichSideOfPlane(pos, pNormal, pPos) > 0)  mFrontMesh.setColor(i, boxClear);
+			if (checkWhichSideOfPlane(pos, planeNormal, planePos) > 0)  mFrontMesh.setColor(i, boxClear);
 			else								mFrontMesh.setColor(i, boyGray);
 		}
 		for (int i = 0; i < mBackMesh.getNumVertices(); i++) {
 			auto pos = mBackMesh.getVertex(i);
-			if (checkWhichSideOfPlane(pos, pNormal, pPos) > 0) 	mBackMesh.setColor(i, boxClear);
+			if (checkWhichSideOfPlane(pos, planeNormal, planePos) > 0) 	mBackMesh.setColor(i, boxClear);
 			else								mBackMesh.setColor(i, boyGray);
 		}
 		for (int i = 0; i < mLeftMesh.getNumVertices(); i++) {
 			auto pos = mLeftMesh.getVertex(i);
-			if (checkWhichSideOfPlane(pos, pNormal, pPos) > 0) 	mLeftMesh.setColor(i, boxClear);
+			if (checkWhichSideOfPlane(pos, planeNormal, planePos) > 0) 	mLeftMesh.setColor(i, boxClear);
 			else								mLeftMesh.setColor(i, boyGray);
 		}
 		for (int i = 0; i < mRightMesh.getNumVertices(); i++) {
 			auto pos = mRightMesh.getVertex(i);
-			if (checkWhichSideOfPlane(pos, pNormal, pPos) > 0) 	mRightMesh.setColor(i, boxClear);
+			if (checkWhichSideOfPlane(pos, planeNormal, planePos) > 0) 	mRightMesh.setColor(i, boxClear);
 			else								mRightMesh.setColor(i, boyGray);
 		}
 
 		// build the cross section mesh (ONLY WORKS FOR PLANES WITH Z = 0)
 
 		// first get the far XY edges of the cross section
-		ofVec2f dir = ofVec2f(pNormal).getRotated(-90);
+		ofVec2f dir = ofVec2f(planeNormal).getRotated(-90);
 
-		ofVec2f left = getRectIntersection(dir, mMeshSize);
-		ofVec2f right = getRectIntersection(-dir, mMeshSize);
+		ofVec2f left = getRectIntersection(dir, planePos, mMeshSize) + planePos;
+		ofVec2f right = getRectIntersection(-dir, planePos, mMeshSize) + planePos;
 		ofVec2f leftToRight = right - left;
 
 		//assemble mesh
@@ -293,16 +293,15 @@ void MeshController::draw() {
 		mRightMesh.drawWireframe();
 	} else {
 
-		mTopMesh.draw();
-	
-		//mSampleTex.getTexture().bind();
 			mCrossSection.draw();
+	
+			mTopMesh.draw();
 			mBottomMesh.draw();
 			mFrontMesh.draw();
 			mBackMesh.draw();
 			mLeftMesh.draw();
 			mRightMesh.draw();
-		//mSampleTex.getTexture().unbind();
+		
 
 	}
 
