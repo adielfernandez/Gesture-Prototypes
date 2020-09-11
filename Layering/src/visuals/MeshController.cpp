@@ -172,6 +172,62 @@ void MeshController::createMesh() {
 
 	}
 
+	mTopOutline.clear();
+	mTopOutline.setMode(OF_PRIMITIVE_LINE_STRIP);
+
+	// walk around the edge of the image and assemble the outline, cloclwise from top left
+	ofFloatColor outlineCol = ofFloatColor(mOutlineBrightPct, 1.0f);
+	// TOP
+	for (int x = 0; x < mResX; x++) {
+		float y = 0;
+		float	gray = getGrayValFromImg(x * mImgSpacing.x, y * mImgSpacing.y);
+		ofVec2f pos = ofVec2f(x * mGridSpacing.x, y * mGridSpacing.y) - mMeshSize / 2.0f;
+		float	height = getHeightForVal(gray);
+		ofVec3f top = ofVec3f(pos.x, pos.y, height);
+
+		mTopOutline.addVertex(top);
+		mTopOutline.addColor(outlineCol);
+
+		if (x == 0) oTL = top;
+		if (x == mResX - 1) oTR = top;
+	}
+	// RIGHT
+	for (int y = 0; y < mResY; y++) {
+		float x = mResX - 1;
+		float	gray = getGrayValFromImg(x * mImgSpacing.x, y * mImgSpacing.y);
+		ofVec2f pos = ofVec2f(x * mGridSpacing.x, y * mGridSpacing.y) - mMeshSize / 2.0f;
+		float	height = getHeightForVal(gray);
+		ofVec3f top = ofVec3f(pos.x, pos.y, height);
+
+		mTopOutline.addVertex(top);
+		mTopOutline.addColor(outlineCol);
+	}
+	// BOTTOM (Right to left)
+	for (int x = mResX - 1; x > -1; x--) {
+		float y = mResY - 1;
+		float	gray = getGrayValFromImg(x * mImgSpacing.x, y * mImgSpacing.y);
+		ofVec2f pos = ofVec2f(x * mGridSpacing.x, y * mGridSpacing.y) - mMeshSize / 2.0f;
+		float	height = getHeightForVal(gray);
+		ofVec3f top = ofVec3f(pos.x, pos.y, height);
+
+		mTopOutline.addVertex(top);
+		mTopOutline.addColor(outlineCol);
+
+		if (x == 0) oBL = top;  
+		if (x == mResX - 1) oBR = top;
+	}
+	// LEFT (bottom to top)
+	for (int y = mResY - 1; y > -1; y--) {
+		float x = 0;
+		float	gray = getGrayValFromImg(x * mImgSpacing.x, y * mImgSpacing.y);
+		ofVec2f pos = ofVec2f(x * mGridSpacing.x, y * mGridSpacing.y) - mMeshSize / 2.0f;
+		float	height = getHeightForVal(gray);
+		ofVec3f top = ofVec3f(pos.x, pos.y, height);
+
+		mTopOutline.addVertex(top);
+		mTopOutline.addColor(outlineCol);
+	}
+
 	mTopMeshOriginal.clear();
 	mTopMeshOriginal = mTopMesh;
 
@@ -325,6 +381,26 @@ void MeshController::draw() {
 		mLeftMesh.drawWireframe();
 		mRightMesh.drawWireframe();
 	} else {
+		mTopOutline.draw();
+
+		// draw box outlines
+		// bottom first
+		ofPushStyle();
+		ofPushMatrix();
+		ofTranslate(0, 0, mBottomZ);
+		ofSetLineWidth(1);
+		ofSetColor(255 * mOutlineBrightPct);
+		ofNoFill();
+		ofDrawRectangle(-mMeshSize / 2.0f, mMeshSize.x, mMeshSize.y);
+
+		ofPopMatrix();
+		// four edges
+		ofDrawLine(oTL.x, oTL.y, oTL.z, oTL.x, oTL.y, mBottomZ);
+		ofDrawLine(oTR.x, oTR.y, oTR.z, oTR.x, oTR.y, mBottomZ);
+		ofDrawLine(oBL.x, oBL.y, oBL.z, oBL.x, oBL.y, mBottomZ);
+		ofDrawLine(oBR.x, oBR.y, oBR.z, oBR.x, oBR.y, mBottomZ);
+
+		ofPopStyle();
 
 		mTopMesh.draw();
 		mBottomMesh.draw();

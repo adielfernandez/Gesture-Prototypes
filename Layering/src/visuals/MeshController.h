@@ -47,6 +47,8 @@ private:
 	ofVboMesh mTopMesh;
 	ofVboMesh mTopMeshOriginal;
 	ofVboMesh mBottomMesh;
+
+	ofVboMesh mTopOutline;
 	
 	ofVboMesh mFrontMesh;
 	ofVboMesh mBackMesh;
@@ -98,5 +100,10 @@ private:
 
 	float mMinImgDepthVal;
 	float mMaxImgDepthVal;
+
+	float mOutlineBrightPct = 0.65f;
+
+	// outline corners
+	ofVec3f oTL, oTR, oBL, oBR;
 
 };
