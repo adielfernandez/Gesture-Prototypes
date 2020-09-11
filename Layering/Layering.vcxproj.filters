@@ -109,6 +109,9 @@
     <ClCompile Include="src\visuals\MeshController.cpp">
       <Filter>src\visuals</Filter>
     </ClCompile>
+    <ClCompile Include="src\visuals\GroundTextureMaker.cpp">
+      <Filter>src\visuals</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -883,6 +886,9 @@
     </ClInclude>
     <ClInclude Include="src\utils\Math.h">
       <Filter>src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\visuals\GroundTextureMaker.h">
+      <Filter>src\visuals</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

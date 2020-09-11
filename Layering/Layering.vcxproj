@@ -210,6 +210,7 @@
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvImage.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp" />
     <ClCompile Include="src\visuals\Axes.cpp" />
+    <ClCompile Include="src\visuals\GroundTextureMaker.cpp" />
     <ClCompile Include="src\visuals\MeshController.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -417,6 +418,7 @@
     <ClInclude Include="src\utils\Math.h" />
     <ClInclude Include="src\utils\SmoothedVec2.h" />
     <ClInclude Include="src\visuals\Axes.h" />
+    <ClInclude Include="src\visuals\GroundTextureMaker.h" />
     <ClInclude Include="src\visuals\MeshController.h" />
   </ItemGroup>
   <ItemGroup>

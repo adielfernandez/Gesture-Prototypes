@@ -76,7 +76,7 @@
 	<Resolution_X>371</Resolution_X>
 		<Resolution_Y>277</Resolution_Y>
 		<Reset_Mesh>0</Reset_Mesh>
-		<Perform_Cross_Section>0</Perform_Cross_Section>
+		<Perform_Cross_Section>1</Perform_Cross_Section>
 		<Water_Level_Pct>0.178571</Water_Level_Pct>
 	</MESH>
 </group>

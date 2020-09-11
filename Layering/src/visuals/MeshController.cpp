@@ -43,6 +43,8 @@ void MeshController::setup() {
 
 	mSampleTex.load("images/tex.png");
 
+	mGround.setup(1000, 1000);
+
 }
 
 void MeshController::createMesh() {
@@ -168,6 +170,16 @@ void MeshController::createMesh() {
 	mTopMeshOriginal.clear();
 	mTopMeshOriginal = mTopMesh;
 
+	mFrontMeshOriginal.clear();
+	mBackMeshOriginal.clear();
+	mLeftMeshOriginal.clear();
+	mRightMeshOriginal.clear();
+
+	mFrontMeshOriginal = mFrontMesh;
+	mBackMeshOriginal = mBackMesh;
+	mLeftMeshOriginal = mLeftMesh;
+	mRightMeshOriginal = mRightMesh;
+
 	ofLogNotice("Total Verts: " + ofToString(getTotalVerts()));
 
 }
@@ -179,8 +191,6 @@ void MeshController::update() {
 		mButtonPressTime = ofGetElapsedTimef();
 		bResetMesh = false;
 	}
-
-
 
 
 	if (bShouldCrossSection) {
@@ -210,25 +220,26 @@ void MeshController::update() {
 		//	else								mBottomMesh.setColor(i, boyGray);
 		//}
 
+		mFrontMesh = mFrontMeshOriginal;
+		mBackMesh = mBackMeshOriginal;
+		mLeftMesh = mLeftMeshOriginal;
+		mRightMesh = mRightMeshOriginal;
+
 		for (int i = 0; i < mFrontMesh.getNumVertices(); i++) {
 			auto pos = mFrontMesh.getVertex(i);
 			if (checkWhichSideOfPlane(pos, planeNormal, planePos) > 0)  mFrontMesh.setColor(i, boxClear);
-			else								mFrontMesh.setColor(i, boyGray);
 		}
 		for (int i = 0; i < mBackMesh.getNumVertices(); i++) {
 			auto pos = mBackMesh.getVertex(i);
 			if (checkWhichSideOfPlane(pos, planeNormal, planePos) > 0) 	mBackMesh.setColor(i, boxClear);
-			else								mBackMesh.setColor(i, boyGray);
 		}
 		for (int i = 0; i < mLeftMesh.getNumVertices(); i++) {
 			auto pos = mLeftMesh.getVertex(i);
 			if (checkWhichSideOfPlane(pos, planeNormal, planePos) > 0) 	mLeftMesh.setColor(i, boxClear);
-			else								mLeftMesh.setColor(i, boyGray);
 		}
 		for (int i = 0; i < mRightMesh.getNumVertices(); i++) {
 			auto pos = mRightMesh.getVertex(i);
 			if (checkWhichSideOfPlane(pos, planeNormal, planePos) > 0) 	mRightMesh.setColor(i, boxClear);
-			else								mRightMesh.setColor(i, boyGray);
 		}
 
 		// build the cross section mesh (ONLY WORKS FOR PLANES WITH Z = 0)
@@ -244,6 +255,8 @@ void MeshController::update() {
 		ofFloatColor green(0.0, 1.0, 0.0, 1.0);
 		mCrossSection.clear();
 
+
+
 		// Starting at left, go through the image and get the heights of the top mesh
 		// then add them in a triangle strip (adding bottom of cross section every other point
 		for (int i = 0; i <= mCrossSamples; i++) {
@@ -251,16 +264,30 @@ void MeshController::update() {
 			// walk a line across the mesh and sample the image to create the top of the cross section
 			float pct = i / (float)mCrossSamples;
 
-			ofVec2f meshCoord = left + leftToRight * pct;
+			ofVec2f lengthAlongSection = leftToRight * pct;
+			ofVec2f meshCoord = left + lengthAlongSection;
 			ofVec2f sampleCoord = getImgCoord(meshCoord);
 			float imgVal = getGrayValFromImg(sampleCoord.x, sampleCoord.y);
 			float height = getHeightForVal(imgVal);
 
 			mCrossSection.addVertex(ofVec3f(meshCoord.x, meshCoord.y, height));
 			mCrossSection.addVertex(ofVec3f(meshCoord.x, meshCoord.y, mBottomZ));
-			mCrossSection.addColor(green);
-			mCrossSection.addColor(green);
+
+			float xCoord = pct * mGround.getFbo().getWidth();
+			mCrossSection.addTexCoord(ofVec2f(xCoord, 1000));
+			mCrossSection.addTexCoord(ofVec2f(xCoord, 0.0f));
+			
+			//mCrossSection.addTexCoord(ofVec2f(pct, 1.0f));
+			//mCrossSection.addTexCoord(ofVec2f(pct, 0.0f));
+
+			//mCrossSection.addColor(green);
+			//mCrossSection.addColor(green);
 		}
+
+		mGround.update(left, right);
+
+		//ofLogNotice("LEFT: " + ofToString(left) + "RIGHT: " + ofToString(right));
+
 
 	} else {
 
@@ -293,8 +320,18 @@ void MeshController::draw() {
 		mRightMesh.drawWireframe();
 	} else {
 
+		if (mGround.isAllocated()) {
+			//ofDisableArbTex();
+			//ofEnableNormalizedTexCoords();
+			mGround.getTexture().bind();
 			mCrossSection.draw();
-	
+			mGround.getTexture().unbind();
+			//ofDisableNormalizedTexCoords();
+			//ofEnableArbTex();
+		} else {
+			mCrossSection.draw();
+		}
+
 			mTopMesh.draw();
 			mBottomMesh.draw();
 			mFrontMesh.draw();

@@ -5,7 +5,7 @@
 #include "../gui/FontManager.h"
 #include "ofxAutoReloadedShader.h"
 #include "../utils/Math.h"
-
+#include "GroundTextureMaker.h"
 
 class MeshController {
 
@@ -26,8 +26,11 @@ public:
 	void toggleWireframe() { bWireframe = !bWireframe; }
 
 	ofVec2f getMeshSizeXY() { return mMeshSize; }
+	
+	GroundTextureMaker mGround;
 
 private:
+
 
 	ofImage mDepthImg;
 	ofImage mColorPalette;
@@ -41,6 +44,11 @@ private:
 	ofVboMesh mBackMesh;
 	ofVboMesh mLeftMesh;
 	ofVboMesh mRightMesh;
+
+	ofVboMesh mFrontMeshOriginal;
+	ofVboMesh mBackMeshOriginal;
+	ofVboMesh mLeftMeshOriginal;
+	ofVboMesh mRightMeshOriginal;
 
 	ofVboMesh mCrossSection;
 

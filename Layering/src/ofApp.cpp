@@ -55,7 +55,7 @@ void ofApp::update(){
 
 	ofVec3f rotatedNorm = pNormal.getRotated(angle, ofVec3f(0,0,1));
 
-	pPos.x = mMeshController.getMeshSizeXY().x * 0.25f;
+	//pPos.x = mMeshController.getMeshSizeXY().x * 0.25f;
 	mMeshController.setClippingPlane(pPos, rotatedNorm);
 	mMeshController.update();
 
@@ -99,6 +99,7 @@ void ofApp::draw(){
 	if (bShowGui) mAxes.drawAxes();
 
     cam.end();
+
     
 
 	if (bShowGui) {
@@ -107,6 +108,11 @@ void ofApp::draw(){
 		ofDrawBitmapString("Framerate: " + ofToString(ofGetFrameRate(), 2), 10, 20);
 
 		SharedGui::get()->draw();
+
+		float w = 400;
+		float m = 20;
+		ofSetColor(255);
+		mMeshController.mGround.getFbo().draw(m, ofGetHeight() - w - m, w, w);
 	}
     
 }
