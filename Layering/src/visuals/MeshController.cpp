@@ -80,7 +80,7 @@ void MeshController::createMesh() {
 	mRightMesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
 	mCrossSection.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
 
-	ofFloatColor sideBottomColor = ofFloatColor(0.423, 0.219, 0.074, 1.0f);
+	ofFloatColor sideBottomColor = ofFloatColor(0.117, 0.435, 0.023, 1.0f);
 
 
 	// go through the plane and move each vertex to where we need it
@@ -113,6 +113,13 @@ void MeshController::createMesh() {
 		// tex coord of top of side mesh (0 at bottom, 1 at top
 		float topTexCoordY = (mBottomZ + height) / (mMaxHeight + mBottomZ);
 		ofVec2f hm = mMeshSize / 2.0f;
+
+		float hue = topColor.getHue();
+		float sat = topColor.getSaturation();
+		float bri = topColor.getBrightness();
+
+		topColor.setHsb(hue, sat, bri * 0.5f, 1.0f);
+		sideBottomColor.setHsb(hue, 1.0f, 0.5f, 1.0f);
 
 		// build the sides
 		if (y == 0) {

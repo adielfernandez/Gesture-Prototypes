@@ -35,12 +35,16 @@ class ofApp : public ofBaseApp{
 	bool bSetupCamera = false;
 	ofVec3f mGlobalCamPos;
 	ofVec3f mCamStartPos;
+	ofVec3f mCamLookAt = ofVec3f(0, 0, -300);
 	void resetCamera();
 
 	//ofLight light;
 	//ofMaterial material;
 
-	bool bShowGui = true;
+	bool bShowGui = false;
+
+	ofImage mDinoImg;
+	std::vector<ofVec3f> mDinoPositions;
 
 
 	float getBillboardAngle(ofVec3f globalPos);
@@ -66,7 +70,8 @@ class ofApp : public ofBaseApp{
 	ofVec3f mInitialOneHandPos;
 	ofVec3f mInitialCamPos;
 	ofParameter<float>	mCameraPanMult;
-
+	float mFirstSingleGrabTime = 0;
+	bool bFirstGrab = true;
 
 	ofxKFW2::Device mKinect;
 	bool bDrawKinect = false;

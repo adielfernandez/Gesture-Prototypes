@@ -35,8 +35,9 @@ void ofApp::setup(){
 	mPlaneNormal = ofVec3f(0, 1, 0);
 	mPlaneNormal.normalize();
 
-	float y = mMeshController.getMeshSizeXY().y / 2.0f;
-	mPlanePos.set(0, y, 0);
+	
+
+	mPlanePos.set(0);
 
 
 	// camera setup
@@ -46,16 +47,32 @@ void ofApp::setup(){
 	mCamStartPos = mGlobalCamPos;
 
 	cam.setGlobalPosition(mGlobalCamPos);
-	cam.lookAt(ofVec3f(0));
+	cam.lookAt(mCamLookAt);
 
 	bSetupCamera = false;
+
+	mDinoImg.load("images/skull-small.png");
+
+	ofVec3f hm = mMeshController.getMaxSize() / 2.0f;
+
+	for (int i = 0; i < 10; i++) {
+		
+		float x = ofRandom(-hm.x, hm.x) * 0.7f; // scale down to make sure it's inside the box
+		float y = ofRandom(-hm.y, hm.y) * 0.7f;
+		float z = ofRandom(mMeshController.getMaxBottom(), -250);
+
+		//cout << z << endl;
+
+		mDinoPositions.push_back(ofVec3f(x, y, z));
+
+	}
 
 }
 
 void ofApp::resetCamera() {
 	mGlobalCamPos = mCamStartPos;
 	cam.setGlobalPosition(mCamStartPos);
-	cam.lookAt(ofVec3f(0), ofVec3f(0, 0, 1));
+	cam.lookAt(mCamLookAt, ofVec3f(0, 0, 1));
 }
 
 //--------------------------------------------------------------
@@ -75,7 +92,7 @@ void ofApp::update(){
 
 	// Look for hands crossing the break plane
 	bool bodyFound = false;
-	ofVec3f head, leftHand, rightHand, leftElbow, rightElbow;
+	ofVec3f head, leftHand, rightHand, hip;
 
 	bool leftGrab = false;
 	bool rightGrab = false;
@@ -97,11 +114,8 @@ void ofApp::update(){
 				else if (joint.first == JointType_HandRight) {
 					rightHand = joint.second.getPositionInWorld();
 				}
-				else if (joint.first == JointType_ElbowLeft) {
-					leftElbow = joint.second.getPositionInWorld();
-				}
-				else if (joint.first == JointType_ElbowRight) {
-					rightElbow = joint.second.getPositionInWorld();
+				else if (joint.first == JointType_HipLeft) {
+					hip = joint.second.getPositionInWorld();
 				}
 			}
 
@@ -113,10 +127,14 @@ void ofApp::update(){
 	}
 
 
-	if (leftGrab && rightGrab) {
+	bool leftAboveHip = leftHand.y > hip.y;
+	bool rightAboveHip = rightHand.y > hip.y;
+
+	if (leftGrab && rightGrab && leftAboveHip && rightAboveHip) {
 
 		// cancel one hand gesture
 		bOneHandGestureActive = false;
+		bFirstGrab = true;
 
 		// get angle between hands from left to right, 
 		// flatted into the XZ plane (in camera space), and transpose XY
@@ -134,15 +152,19 @@ void ofApp::update(){
 			mInitialHandVec = leftToRight;
 			mInitialHandCenter = currentHandCenter;
 
-			// start plane close to front
-			mPlanePos.set(0);
-			mInitialPlanePos = mPlanePos;
-
 			// get the vector from the origin to the camera pos to set the plane normal
 			ofVec3f norm = mGlobalCamPos;
 			norm.z = 0; 
 			mPlaneNormal = norm.normalized();
+
 			
+			// set plane at cam pos then just clamp it
+			ofVec2f halfMesh = mMeshController.getMeshSizeXY() / 2.0f;
+			mPlanePos = ofClampVec(mGlobalCamPos, -halfMesh, halfMesh);
+			
+			mInitialPlanePos = mPlanePos;
+
+		
 		}
 
 		float handAngle = ofRadToDeg( getAngleBetween(leftToRight, mInitialHandVec) );
@@ -183,28 +205,38 @@ void ofApp::update(){
 
 			ofVec3f handPos = bUseLeft ? leftHand : rightHand;
 			bUseLeft = leftGrab ? true : false;
+
+			if (bFirstGrab) {
+				mFirstSingleGrabTime = ofGetElapsedTimef();
+				bFirstGrab = false;
+			}
 			
-			if (!bOneHandGestureActive) {
+
+			float timeSinceFirstGrab = ofGetElapsedTimef() - mFirstSingleGrabTime;
+			if (!bOneHandGestureActive && timeSinceFirstGrab > 0.25f) {
 				bOneHandGestureActive = true;
 				mInitialOneHandPos = handPos;
 				mInitialCamPos = mGlobalCamPos;
 			}
 
-			// invert Y and Z
-			ofVec3f rawDisp = (handPos - mInitialOneHandPos);
+			if (bOneHandGestureActive) {
+				// invert Y and Z
+				ofVec3f rawDisp = (handPos - mInitialOneHandPos);
 
-			float displacement = -rawDisp.x;
+				float displacement = -rawDisp.x;
 
-			float angle = displacement * mCameraPanMult;
+				float angle = displacement * mCameraPanMult;
 
-			mGlobalCamPos = mInitialCamPos.getRotated(angle, ofVec3f(0,0,1));
+				mGlobalCamPos = mInitialCamPos.getRotated(angle, ofVec3f(0,0,1));
 
-			cam.setGlobalPosition(mGlobalCamPos);
-			cam.lookAt(ofVec3f(0), ofVec3f(0, 0, 1));
+				cam.setGlobalPosition(mGlobalCamPos);
+				cam.lookAt(mCamLookAt, ofVec3f(0, 0, 1));
+			}
+
 
 		} else {
 			bOneHandGestureActive = false;
-
+			bFirstGrab = true;
 		}
 
 
@@ -268,11 +300,24 @@ void ofApp::draw(){
 
 
 
+	ofSetColor(255);
+	for (auto & pos : mDinoPositions) {
+
+		float angle = getBillboardAngle(pos);
+		ofVec3f vec = getBillboardVec(pos);
+
+
+		ofPushMatrix();
+		ofTranslate(pos.x, pos.y, pos.z);
+		ofRotate(angle, vec.x, vec.y, vec.z);
+		//ofRotate(180, 0, 1, 0);
+		mDinoImg.draw(0, 0);
+		ofPopMatrix();
+	}
+
+
+
 	mMeshController.draw();
-
-
-
-
 
 
 

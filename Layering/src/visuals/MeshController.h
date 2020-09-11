@@ -29,6 +29,12 @@ public:
 	void setShouldCrossSection(bool should) { bShouldCrossSection = should; }
 
 	ofVec2f getMeshSizeXY() { return mMeshSize; }
+
+	ofVec3f getMaxSize() {
+		return ofVec3f(mMeshSize.x, mMeshSize.y, mMaxHeight + abs(mBottomZ));
+	}
+
+	float getMaxBottom() { return mBottomZ; }
 	
 	GroundTextureMaker mGround;
 
