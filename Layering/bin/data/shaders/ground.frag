@@ -6,7 +6,12 @@ uniform vec2 uMouse;
 uniform vec2 uResolution;
 uniform vec2 uLeft;
 uniform vec2 uRight;
-//uniform sampler2DRect tex0;
+
+uniform sampler2DRect tex1;
+uniform sampler2DRect tex2;
+uniform sampler2DRect tex3;
+uniform sampler2DRect tex4;
+uniform sampler2DRect tex5;
 
 out vec4 fragColor;
 
@@ -130,8 +135,6 @@ void main(){
     //normalized frag coords
     vec2 normCoord = vec2(gl_FragCoord.x/uResolution.x, gl_FragCoord.y/uResolution.y);
 
-    //vec4 img = texture(tex0, gl_FragCoord.xy);
-
     // use left and right edges of cross section to determine where we are in perlin space
     float scaleXY = 0.1f;
     float scaleZ = 0.0f;
@@ -145,34 +148,39 @@ void main(){
 
    float z = 300;
     // ----- First Layer -----
-    float n1Scale = 0.01f;
+    float n1Scale = 0.05f;
     float n1 = snoise(vec3(noiseCoord.x * n1Scale, noiseCoord.y * n1Scale, z));
-    vec4 layer1Col = vec4(0, 0.5, 1, 1);
+    vec4 img1 = texture(tex1, gl_FragCoord.xy);
+    vec4 layer1Col = img1; // vec4(0, 0.5, 1, 1);
     float layer1Level = map(n1, -1, 1, 0.05, 0.3);
 
     // ----- Second Layer -----
-    float n2Scale = 0.15f;
+    float n2Scale = 0.01f;
     float n2 = snoise(vec3(noiseCoord.x * n2Scale, noiseCoord.y * n2Scale, z * 2));
-    vec4 layer2Col = vec4(1, 0.5, 0, 1);
-    float layer2Level = map(n2, -1, 1, 0.1, 0.3);
+    vec4 img2 = texture(tex2, gl_FragCoord.xy);
+    vec4 layer2Col = img2; // vec4(1, 0.5, 0, 1);
+    float layer2Level = map(n2, -1, 1, 0.1, 0.2);
 
     // ----- Third Layer -----
-    float n3Scale = 0.1f;
+    float n3Scale = 0.01f;
     float n3 = snoise(vec3(noiseCoord.x * n3Scale, noiseCoord.y * n3Scale, z * 3));
-    vec4 layer3Col = vec4(1, 0, 1, 1);
-    float layer3Level = map(n3, -1, 1, 0.1, 0.3);
+    vec4 img3 = texture(tex4, gl_FragCoord.xy);
+    vec4 layer3Col = img3; // vec4(1, 0, 1, 1);
+    float layer3Level = map(n3, -1, 1, 0.1, 0.2);
 
     // ----- Fourth Layer -----
-    float n4Scale = 0.1f;
+    float n4Scale = 0.01f;
     float n4 = snoise(vec3(noiseCoord.x * n4Scale, noiseCoord.y * n4Scale, z * 4));
-    vec4 layer4Col = vec4(1, 1, 0, 1);
-    float layer4Level = map(n4, -1, 1, 0.1, 0.3);
+    vec4 img4 = texture(tex3, gl_FragCoord.xy);
+    vec4 layer4Col = img4; // vec4(1, 1, 0, 1);
+    float layer4Level = map(n4, -1, 1, 0.1, 0.2);
 
     // ----- Fifth Layer -----
-    float n5Scale = 0.1f;
+    float n5Scale = 0.5f;
     float n5 = snoise(vec3(noiseCoord.x * n5Scale, noiseCoord.y * n5Scale, z * 5));
-    vec4 layer5Col = vec4(1, 0, 0, 1);
-    float layer5Level = map(n5, -1, 1, 0.1, 0.3);
+    vec4 img5 = texture(tex5, gl_FragCoord.xy);
+    vec4 layer5Col = img5; // vec4(1, 0, 0, 1);
+    float layer5Level = map(n5, -1, 1, 0.1, 0.2);
 
     if (normCoord.y < layer1Level) {
         fragColor = layer1Col;    

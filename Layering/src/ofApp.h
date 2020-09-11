@@ -5,6 +5,8 @@
 #include "gui/SharedGui.h"
 #include "gui/FontManager.h"
 #include "visuals/MeshController.h"
+#include "ofxKinectForWindows2.h"
+#include "kinect/KinectUtils.h"
 
 class ofApp : public ofBaseApp{
 
@@ -30,8 +32,13 @@ class ofApp : public ofBaseApp{
 	MeshController mMeshController;
 
     ofEasyCam cam;
-	ofLight light;
-	ofMaterial material;
+	bool bSetupCamera = false;
+	ofVec3f mGlobalCamPos;
+	ofVec3f mCamStartPos;
+	void resetCamera();
+
+	//ofLight light;
+	//ofMaterial material;
 
 	bool bShowGui = true;
 
@@ -40,7 +47,28 @@ class ofApp : public ofBaseApp{
 	ofVec3f getBillboardVec(ofVec3f globalPos);
 
 	// reveal plane
-	ofVec3f pNormal;
-	ofVec3f pPos;
+	ofVec3f mPlaneNormal;
+	ofVec3f mPlaneRotNorm;
+	ofVec3f mPlanePos;
+
+
+	bool bTwoHandGestureActive = false;
+	bool bOneHandGestureActive = false;
+	bool bUseLeft = false;
+
+	
+	// Vector from left to right hand, flattened into XZ plane (in camera space)
+	ofVec3f mInitialHandVec;  
+	ofVec3f mInitialHandCenter;
+	ofVec3f mInitialPlanePos;
+	ofParameter<float>	mPlaneMovementScale;
+
+	ofVec3f mInitialOneHandPos;
+	ofVec3f mInitialCamPos;
+	ofParameter<float>	mCameraPanMult;
+
+
+	ofxKFW2::Device mKinect;
+	bool bDrawKinect = false;
 
 };

@@ -247,3 +247,14 @@ static float checkWhichSideOfPlane(ofVec3f pt, ofVec3f planeNomral, ofVec3f plan
 	ofVec3f planeToPt = pt - planePos;
 	return planeToPt.dot(planeNomral);
 }
+
+static ofVec3f ofClampVec(ofVec3f & val, ofVec3f min, ofVec3f max) {
+	return ofVec3f(	ofClamp(val.x, min.x, max.x),
+					ofClamp(val.y, min.y, max.y),
+					ofClamp(val.z, min.z, max.z));
+}
+
+static ofVec2f ofClampVec(ofVec2f & val, ofVec2f min, ofVec2f max) {
+	return ofVec2f(	ofClamp(val.x, min.x, max.x),
+					ofClamp(val.y, min.y, max.y) );
+}

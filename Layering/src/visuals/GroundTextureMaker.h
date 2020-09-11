@@ -25,6 +25,12 @@ public:
 	bool isAllocated() { return mFbo.isAllocated(); }
 private:
 
+	ofImage img1;
+	ofImage img2;
+	ofImage img3;
+	ofImage img4;
+	ofImage img5;
+
 
 	ofFbo		mFbo;
 	ofVec2f		mFboSize;

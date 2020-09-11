@@ -62,6 +62,10 @@
 <____UX/>
 	<UX>
 		<Break_Plane_Dist>1.5</Break_Plane_Dist>
+	<Plane_Movement_Scaling>1020.41</Plane_Movement_Scaling>
+	<Camera_Movement_Scaling>1000</Camera_Movement_Scaling>
+	<Camera_Movement_Scaling_XY>1500</Camera_Movement_Scaling_XY>
+		<Camera_Movement_Scaling_Z>1000</Camera_Movement_Scaling_Z>
 	</UX>
 	<____KINECT/>
 	<KINECT>
@@ -71,12 +75,12 @@
 <____MESH/>
 	<MESH>
 		<Max_Terrain_Height>85.7143</Max_Terrain_Height>
-		<Bottom_Depth>-163.265</Bottom_Depth>
-	<Cross_Section_Samples>100</Cross_Section_Samples>
-	<Resolution_X>371</Resolution_X>
-		<Resolution_Y>277</Resolution_Y>
+		<Bottom_Depth>-535.714</Bottom_Depth>
+	<Cross_Section_Samples>284</Cross_Section_Samples>
+	<Resolution_X>208</Resolution_X>
+		<Resolution_Y>97</Resolution_Y>
 		<Reset_Mesh>0</Reset_Mesh>
-		<Perform_Cross_Section>1</Perform_Cross_Section>
+		<Perform_Cross_Section>0</Perform_Cross_Section>
 		<Water_Level_Pct>0.178571</Water_Level_Pct>
 	</MESH>
 </group>

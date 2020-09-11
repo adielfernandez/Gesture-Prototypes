@@ -37,11 +37,9 @@ void MeshController::setup() {
 		if (val > mMaxImgDepthVal) mMaxImgDepthVal = val;
 	}
 
-	ofLogNotice("Image Min Depth: " + ofToString(mMinImgDepthVal) + ", Max Depth: " + ofToString(mMaxImgDepthVal));
+	//ofLogNotice("Image Min Depth: " + ofToString(mMinImgDepthVal) + ", Max Depth: " + ofToString(mMaxImgDepthVal));
 
-	mColorPalette.load("images/colorPalette.png");
-
-	mSampleTex.load("images/tex.png");
+	mColorPalette.load("images/mountains.png");
 
 	mGround.setup(1000, 1000);
 
@@ -82,7 +80,7 @@ void MeshController::createMesh() {
 	mRightMesh.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
 	mCrossSection.setMode(OF_PRIMITIVE_TRIANGLE_STRIP);
 
-	ofFloatColor boxGray = ofFloatColor(0.0f, 0.2f, 0.0f, 1.0f);
+	ofFloatColor sideBottomColor = ofFloatColor(0.423, 0.219, 0.074, 1.0f);
 
 
 	// go through the plane and move each vertex to where we need it
@@ -129,7 +127,7 @@ void MeshController::createMesh() {
 			//mFrontMesh.addTexCoord(ofVec2f(texCoordX, 0));				// bottom
 
 			mFrontMesh.addColor(topColor);
-			mFrontMesh.addColor(boxGray);
+			mFrontMesh.addColor(sideBottomColor);
 
 		} else if (y == (mResY - 1)) {
 			// build back
@@ -141,7 +139,7 @@ void MeshController::createMesh() {
 			//mFrontMesh.addTexCoord(ofVec2f(texCoordX, 0));				// bottom
 
 			mBackMesh.addColor(topColor);
-			mBackMesh.addColor(boxGray);
+			mBackMesh.addColor(sideBottomColor);
 		} else if (x == 0) {
 			// RIGHT mesh
 			mRightMesh.addVertex(top);
@@ -151,7 +149,7 @@ void MeshController::createMesh() {
 			//mFrontMesh.addTexCoord(ofVec2f(texCoordX, topTexCoordY));	// top
 			//mFrontMesh.addTexCoord(ofVec2f(texCoordX, 0));				// bottom
 			mRightMesh.addColor(topColor);
-			mRightMesh.addColor(boxGray);
+			mRightMesh.addColor(sideBottomColor);
 
 		} else if (x == (mResX - 1)) {
 			// LEFT mesh
@@ -162,7 +160,7 @@ void MeshController::createMesh() {
 			//mFrontMesh.addTexCoord(ofVec2f(texCoordX, topTexCoordY));	// top
 			//mFrontMesh.addTexCoord(ofVec2f(texCoordX, 0));				// bottom
 			mLeftMesh.addColor(topColor);
-			mLeftMesh.addColor(boxGray);
+			mLeftMesh.addColor(sideBottomColor);
 		}
 
 	}
@@ -274,7 +272,8 @@ void MeshController::update() {
 			mCrossSection.addVertex(ofVec3f(meshCoord.x, meshCoord.y, mBottomZ));
 
 			float xCoord = pct * mGround.getFbo().getWidth();
-			mCrossSection.addTexCoord(ofVec2f(xCoord, 1000));
+			float topTexCoordYPct = (abs(mBottomZ) + height) / (abs(mBottomZ) + mMaxHeight);
+			mCrossSection.addTexCoord(ofVec2f(xCoord, topTexCoordYPct * 1000));
 			mCrossSection.addTexCoord(ofVec2f(xCoord, 0.0f));
 			
 			//mCrossSection.addTexCoord(ofVec2f(pct, 1.0f));
@@ -311,7 +310,7 @@ void MeshController::draw() {
 
 	if (bWireframe) {
 		ofSetLineWidth(1);
-		mCrossSection.drawWireframe();
+
 		mTopMesh.drawWireframe();
 		mBottomMesh.drawWireframe();
 		mFrontMesh.drawWireframe();
@@ -320,6 +319,21 @@ void MeshController::draw() {
 		mRightMesh.drawWireframe();
 	} else {
 
+		mTopMesh.draw();
+		mBottomMesh.draw();
+		mFrontMesh.draw();
+		mBackMesh.draw();
+		mLeftMesh.draw();
+		mRightMesh.draw();
+	}
+}
+		
+void MeshController::drawCrossSection() {
+
+	if (bWireframe) {
+		ofSetLineWidth(1);
+		mCrossSection.drawWireframe();
+	} else {
 		if (mGround.isAllocated()) {
 			//ofDisableArbTex();
 			//ofEnableNormalizedTexCoords();
@@ -328,20 +342,11 @@ void MeshController::draw() {
 			mGround.getTexture().unbind();
 			//ofDisableNormalizedTexCoords();
 			//ofEnableArbTex();
-		} else {
+		}
+		else {
 			mCrossSection.draw();
 		}
-
-			mTopMesh.draw();
-			mBottomMesh.draw();
-			mFrontMesh.draw();
-			mBackMesh.draw();
-			mLeftMesh.draw();
-			mRightMesh.draw();
-		
-
 	}
-
 
 }
 

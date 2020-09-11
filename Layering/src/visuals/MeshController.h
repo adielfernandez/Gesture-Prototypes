@@ -22,8 +22,11 @@ public:
 	void setClippingPlane(ofVec3f pos, ofVec3f norm) { planePos = pos; planeNormal = norm; }
 
 	void draw();
+	void drawCrossSection();
 
 	void toggleWireframe() { bWireframe = !bWireframe; }
+
+	void setShouldCrossSection(bool should) { bShouldCrossSection = should; }
 
 	ofVec2f getMeshSizeXY() { return mMeshSize; }
 	
@@ -34,7 +37,6 @@ private:
 
 	ofImage mDepthImg;
 	ofImage mColorPalette;
-	ofImage mSampleTex;
 
 	ofVboMesh mTopMesh;
 	ofVboMesh mTopMeshOriginal;

@@ -13,23 +13,16 @@ void ofApp::setup(){
 	SharedGui::get()->setPosition(10, 80);
 	SharedGui::get()->setColor(ofColor(0, 160, 255));
 
-	//SharedGui::get()->getGroup("UX")->add(mBreakPlaneDist.set("Break Plane Dist", 1.5, 0, 4));
+	SharedGui::get()->getGroup("UX")->add(mPlaneMovementScale.set("Plane Movement Scaling", 1000.0, 0, 2000.0));
+	SharedGui::get()->getGroup("UX")->add(mCameraPanMult.set("Cam Pan Mult", 300.0, 0, 900.0));
+	
 
-
-    
-
-	//set up the different properties of the lighting
-	light.setPosition(400, 0, 400);
-	light.setup();
-
-	light.setDiffuseColor(ofFloatColor::white);
-	light.setAmbientColor(ofFloatColor::darkGray);
-
-	//we also need to set a material property for our objects
-	//so we know how the light will reflect off of them
-	material.setDiffuseColor(ofFloatColor::white);
-	material.setShininess(10.0);
-
+	mKinect.open();
+	mKinect.initDepthSource();
+	mKinect.initColorSource();
+	mKinect.initInfraredSource();
+	mKinect.initBodySource();
+	mKinect.initBodyIndexSource();
 
 	mMeshController.setup();
 
@@ -38,25 +31,189 @@ void ofApp::setup(){
 	mMeshController.createMesh();
 
 
-	// start plane
-	pNormal = ofVec3f(1, 0, 0);
-	pNormal.normalize();
+	// Clipping plane
+	mPlaneNormal = ofVec3f(0, 1, 0);
+	mPlaneNormal.normalize();
 
-	pPos.set(0);
+	float y = mMeshController.getMeshSizeXY().y / 2.0f;
+	mPlanePos.set(0, y, 0);
+
+
+	// camera setup
+	float angleAboveHoriz = 30;
+	mGlobalCamPos = ofVec3f(0, 1000, 0);
+	mGlobalCamPos.rotate(angleAboveHoriz, ofVec3f(1, 0, 0));
+	mCamStartPos = mGlobalCamPos;
+
+	cam.setGlobalPosition(mGlobalCamPos);
+	cam.lookAt(ofVec3f(0));
+
+	bSetupCamera = false;
 
 }
 
+void ofApp::resetCamera() {
+	mGlobalCamPos = mCamStartPos;
+	cam.setGlobalPosition(mCamStartPos);
+	cam.lookAt(ofVec3f(0), ofVec3f(0, 0, 1));
+}
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
-	// map plane to mouse pos
-	float angle = ofMap(ofGetMouseX(), 0, ofGetWindowWidth(), -180, 180);
 
-	ofVec3f rotatedNorm = pNormal.getRotated(angle, ofVec3f(0,0,1));
+	//Cheap camera Hack: ofEasyCam resets itself after the 2nd frame to
+	//whatever default distance it wants so we'll set it back after that bug
+	if (ofGetFrameNum() == 2 && !bSetupCamera) {
 
-	//pPos.x = mMeshController.getMeshSizeXY().x * 0.25f;
-	mMeshController.setClippingPlane(pPos, rotatedNorm);
+		resetCamera();
+		bSetupCamera = true;
+
+	}
+
+
+	mKinect.update();
+
+	// Look for hands crossing the break plane
+	bool bodyFound = false;
+	ofVec3f head, leftHand, rightHand, leftElbow, rightElbow;
+
+	bool leftGrab = false;
+	bool rightGrab = false;
+
+	auto bodies = mKinect.getBodySource()->getBodies();
+	for (auto body : bodies) {
+
+		if (body.tracked) {
+			bodyFound = true;
+			for (auto joint : body.joints) {
+
+				//cout << "First: " << joint.first << ", Second: " << joint.second.getPosition() << endl;
+				if (joint.first == JointType_Head) {
+					head = joint.second.getPositionInWorld();
+				}
+				else if (joint.first == JointType_HandLeft) {
+					leftHand = joint.second.getPositionInWorld();
+				}
+				else if (joint.first == JointType_HandRight) {
+					rightHand = joint.second.getPositionInWorld();
+				}
+				else if (joint.first == JointType_ElbowLeft) {
+					leftElbow = joint.second.getPositionInWorld();
+				}
+				else if (joint.first == JointType_ElbowRight) {
+					rightElbow = joint.second.getPositionInWorld();
+				}
+			}
+
+			if (body.leftHandState == HandState::HandState_Closed) leftGrab = true;
+			if (body.rightHandState == HandState::HandState_Closed) rightGrab = true;
+
+			break;
+		}
+	}
+
+
+	if (leftGrab && rightGrab) {
+
+		// cancel one hand gesture
+		bOneHandGestureActive = false;
+
+		// get angle between hands from left to right, 
+		// flatted into the XZ plane (in camera space), and transpose XY
+		ofVec3f leftToRight = rightHand - leftHand;		
+		leftToRight = ofVec3f(leftToRight.x, leftToRight.z, 0);
+
+		leftToRight.normalize();
+		//cout << "Left to Right: " << leftToRight << endl;
+
+		ofVec3f currentHandCenter = (rightHand + leftHand) / 2.0f;
+
+		if (!bTwoHandGestureActive) {
+			// first frame, initiate gesture
+			bTwoHandGestureActive = true;
+			mInitialHandVec = leftToRight;
+			mInitialHandCenter = currentHandCenter;
+
+			// start plane close to front
+			mPlanePos.set(0);
+			mInitialPlanePos = mPlanePos;
+
+			// get the vector from the origin to the camera pos to set the plane normal
+			ofVec3f norm = mGlobalCamPos;
+			norm.z = 0; 
+			mPlaneNormal = norm.normalized();
+			
+		}
+
+		float handAngle = ofRadToDeg( getAngleBetween(leftToRight, mInitialHandVec) );
+
+		//safety check
+		if ( isnan(handAngle) ) handAngle = 0;
+
+		//cout << "Initial Hand Vec: " << mInitialHandVec << ", Current Hand Vec: " << leftToRight << ", Angle: " << handAngle << endl;
+
+		mPlaneRotNorm = mPlaneNormal.getRotated(handAngle, ofVec3f(0, 0, 1));
+
+		// We only really care about the hands movement to and from the camera, i.e. Z axis
+		ofVec3f rawDisp = currentHandCenter - mInitialHandCenter;
+		float displacement = rawDisp.z * mPlaneMovementScale;
+
+		ofVec2f dir = ofVec2f(mGlobalCamPos.x, mGlobalCamPos.y).normalize();
+		mPlanePos = mInitialPlanePos + dir * displacement;
+
+		ofVec2f halfMesh = mMeshController.getMeshSizeXY() / 2.0f;
+
+		mPlanePos = ofClampVec( mPlanePos, -halfMesh, halfMesh);
+
+		// set the position of the plane based on the difference 
+		// of where the hands are now vs where they started
+
+		mMeshController.setClippingPlane(mPlanePos, mPlaneRotNorm);
+		mMeshController.setShouldCrossSection(true);
+
+
+	} else {
+		bTwoHandGestureActive = false;
+
+		mMeshController.setShouldCrossSection(false);
+
+
+		// SINGLE HAND GESTURE
+		if (leftGrab || rightGrab) {
+
+			ofVec3f handPos = bUseLeft ? leftHand : rightHand;
+			bUseLeft = leftGrab ? true : false;
+			
+			if (!bOneHandGestureActive) {
+				bOneHandGestureActive = true;
+				mInitialOneHandPos = handPos;
+				mInitialCamPos = mGlobalCamPos;
+			}
+
+			// invert Y and Z
+			ofVec3f rawDisp = (handPos - mInitialOneHandPos);
+
+			float displacement = -rawDisp.x;
+
+			float angle = displacement * mCameraPanMult;
+
+			mGlobalCamPos = mInitialCamPos.getRotated(angle, ofVec3f(0,0,1));
+
+			cam.setGlobalPosition(mGlobalCamPos);
+			cam.lookAt(ofVec3f(0), ofVec3f(0, 0, 1));
+
+		} else {
+			bOneHandGestureActive = false;
+
+		}
+
+
+	}
+
+
+	
+
+
 	mMeshController.update();
 
 }
@@ -81,10 +238,38 @@ void ofApp::draw(){
 
 
 
+	mMeshController.drawCrossSection();
+
+	//if (bTwoHandGestureActive) {
+	//	// draw plane rotation axis
+	//	ofPushStyle();
+
+	//	ofPushMatrix();
+
+	//	float angle = ofMap(ofGetMouseX(), 0, ofGetWindowWidth(), -180, 180);
+	//	ofRotate(angle, 0, 0, 1);
+	//	ofRotate(90, 0, 1, 0);
+	//
+	//	float w = 500;
+	//	float h = 1200;
+	//	ofSetColor(255);
+	//	ofNoFill();
+	//	ofDrawRectangle(-w / 2, -h / 2, w, h);
+
+	//	ofPopMatrix();
+	//
+	//
+	//	ofSetLineWidth(3);
+	//	ofSetColor(255, 0, 0);
+	//	ofDrawLine(mPlanePos.x, mPlanePos.y, w/2, mPlanePos.x, mPlanePos.y, -w/2);
+
+	//	ofPopStyle();
+	//}
 
 
 
 	mMeshController.draw();
+
 
 
 
@@ -114,6 +299,14 @@ void ofApp::draw(){
 		ofSetColor(255);
 		mMeshController.mGround.getFbo().draw(m, ofGetHeight() - w - m, w, w);
 	}
+
+	if (bDrawKinect) {
+
+		float left = 250;
+		float top = 20;
+		KinectUtils::drawDebugView(&mKinect, left, top);
+	}
+
     
 }
 
@@ -121,10 +314,12 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
 
 	if (key == 'w') mMeshController.toggleWireframe();
-
+	if (key == 'k') bDrawKinect = !bDrawKinect;
 	if (key == 's') SharedGui::get()->save();
 	if (key == 'l') SharedGui::get()->load();
 	if (key == 'g') bShowGui = !bShowGui;
+
+	if (key == ' ') resetCamera();
     
 }
 
