@@ -35,7 +35,7 @@ class ofApp : public ofBaseApp{
 	bool bSetupCamera = false;
 	ofVec3f mGlobalCamPos;
 	ofVec3f mCamStartPos;
-	ofVec3f mCamLookAt = ofVec3f(0, 0, -300);
+	ofVec3f mCamLookAt = ofVec3f(0, 0, -400);
 	void resetCamera();
 
 	//ofLight light;

@@ -42,7 +42,7 @@ void ofApp::setup(){
 
 	// camera setup
 	float angleAboveHoriz = 30;
-	mGlobalCamPos = ofVec3f(0, 1000, 0);
+	mGlobalCamPos = ofVec3f(0, 1100, 0);
 	mGlobalCamPos.rotate(angleAboveHoriz, ofVec3f(1, 0, 0));
 	mCamStartPos = mGlobalCamPos;
 
@@ -201,7 +201,7 @@ void ofApp::update(){
 
 
 		// SINGLE HAND GESTURE
-		if (leftGrab || rightGrab) {
+		if ((leftGrab && leftAboveHip) || (rightGrab && rightAboveHip)) {
 
 			ofVec3f handPos = bUseLeft ? leftHand : rightHand;
 			bUseLeft = leftGrab ? true : false;
@@ -213,7 +213,7 @@ void ofApp::update(){
 			
 
 			float timeSinceFirstGrab = ofGetElapsedTimef() - mFirstSingleGrabTime;
-			if (!bOneHandGestureActive && timeSinceFirstGrab > 0.25f) {
+			if (!bOneHandGestureActive && timeSinceFirstGrab > 0.15f) {
 				bOneHandGestureActive = true;
 				mInitialOneHandPos = handPos;
 				mInitialCamPos = mGlobalCamPos;

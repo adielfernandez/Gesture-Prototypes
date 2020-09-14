@@ -9,11 +9,11 @@ int main( ){
 	ofGLFWWindowSettings settings;
 	settings.width = 1924;
 	settings.height = 1084;
-	//settings.setPosition(ofVec2f(-1, -1));
-	//settings.decorated = false;
-	settings.setPosition(ofVec2f(50, 50));
-	settings.windowMode = OF_WINDOW;
-	settings.decorated = true;
+	settings.setPosition(ofVec2f(-1, -1));
+	settings.decorated = false;
+	//settings.setPosition(ofVec2f(50, 50));
+	//settings.windowMode = OF_WINDOW;
+	//settings.decorated = true;
 	settings.setGLVersion(2, 1); /// < select your GL Version here
 	ofCreateWindow(settings);
 

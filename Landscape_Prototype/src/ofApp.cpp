@@ -39,7 +39,7 @@ void ofApp::setup(){
 void ofApp::update(){
 	mKinect.update();
 
-	ofVec2f binPos = ofGetWindowSize() / 2.0f;
+	ofVec2f binPos(ofGetWindowWidth() / 2.0f, ofGetWindowHeight() * 0.57);
 
 	bool bodyFound = false;
 	ofVec3f head, leftHand, rightHand, leftElbow, rightElbow;
