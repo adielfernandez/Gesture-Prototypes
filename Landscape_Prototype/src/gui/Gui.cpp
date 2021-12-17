@@ -19,6 +19,8 @@ void Gui::setup(){
 	gui.setup(guiName, guiFileName);
 	gui.add(binocularLabel.setup("   BINOCULAR SETTINGS", ""));
 	gui.add(binScale.setup("Bin. Scale", 1.0, 0.1, 4.0));
+	gui.add(binPosY.setup("Bin. Pos. Y", 0.57, 0.0, 1.0));
+	gui.add(binDisplayYShift.setup("Bin. Display Y Shift", 0.57, -1.0, 1.0));
 	gui.add(binocularAlphaLerpSpeed.setup("Bin. Lerp Speed", 0.02, 0.0, 0.2));
 	gui.add(binZoomLerp.setup("Bin. Zoom Lerp Speed", 0.05, 0.0, 0.2));
 	gui.add(binPosLerp.setup("Bin. Pos Lerp Speed", 0.05, 0.0, 0.2));

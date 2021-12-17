@@ -17,7 +17,7 @@ void ofApp::setup(){
 
 
 	
-	mBackground.load("images/backgrounds/alps16x9.jpg");
+	mBackground.load("images/backgrounds/iowa_landscape.jpg");
 
 
 	mGui = make_shared<Gui>();
@@ -26,12 +26,12 @@ void ofApp::setup(){
 
 	bShowGui = false;
 
-	//ofSetFullscreen(true);
-	bIsFullscreen = false;
+	bIsFullscreen = true;
 
 	mBinoculars.setup();
 	mBinoculars.setTexture(mBackground.getTexture());
 	mBinoculars.setGui(mGui);
+	mBinoculars.setRawImageSize(mBackground.getWidth(), mBackground.getHeight());
 
 }
 
@@ -39,7 +39,7 @@ void ofApp::setup(){
 void ofApp::update(){
 	mKinect.update();
 
-	ofVec2f binPos(ofGetWindowWidth() / 2.0f, ofGetWindowHeight() * 0.57);
+	ofVec2f binPos(ofGetWindowWidth() / 2.0f, ofGetWindowHeight() * mGui->binPosY);
 
 	bool bodyFound = false;
 	ofVec3f head, leftHand, rightHand, leftElbow, rightElbow;
@@ -142,7 +142,7 @@ float ofApp::getAngleBetween(ofVec3f a, ofVec3f b) {
 void ofApp::draw(){
 
 	ofSetColor(255);
-	mBackground.draw(0, 0, 1920, 1080);
+	mBackground.draw(0, 0, ofGetWidth(), ofGetHeight());
 
 	mBinoculars.draw();
 
@@ -174,14 +174,18 @@ void ofApp::keyPressed(int key){
 
 	if (key == 'f') {
 
+		bIsFullscreen = !bIsFullscreen;
+
 		if (bIsFullscreen) {
-			ofSetWindowPosition(100, 100);
-			ofSetWindowShape(1920, 1080);
+			ofSetFullscreen(true);
+			//ofLog() << "Set Fullscreen True";
 		} else {
-			setFakeFullscreen();
+			ofSetFullscreen(false);
+			ofSetWindowPosition(100, 100);
+			ofSetWindowShape(1280, 720);
+			//ofLog() << "Set Fullscreen False";
 		}
 
-		bIsFullscreen != bIsFullscreen;
 
 	}
 

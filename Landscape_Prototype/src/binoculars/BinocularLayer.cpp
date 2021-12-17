@@ -56,9 +56,16 @@ void BinocularLayer::draw() {
 		shader.setUniform2f("uMouse", ofGetMouseX(), ofGetHeight() - ofGetMouseY());
 		shader.setUniform2f("uPosition", mPosition.x, ofGetHeight() - mPosition.y);
 		shader.setUniform2f("uResolution", ofGetWidth(), ofGetHeight());
+		shader.setUniform2f("uRawImageSize", mRawImgSize.x, mRawImgSize.y);
 		shader.setUniform1f("uMagnification", mMagnification);
+		shader.setUniform1f("uDisplayYShift", mGui->binDisplayYShift);
 		shader.setUniform1f("uAlpha", mAlpha);
-		shader.setUniform1f("uBinScale", mGui->binScale);
+
+		// shader is set to display on a 1920x1080 window.
+		// scale it down if we're not at that size
+		float scale = mGui->binScale * ofGetWidth() / 1920.0;
+
+		shader.setUniform1f("uBinScale", scale);
 		//shader.setUniformTexture("uImageTex", mBgTex, 0);
 		//shader.setUniform1f("fogLayers", gui->fogLayers);
 		//shader.setUniform1f("driftSpeed", gui->driftSpeed);

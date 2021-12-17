@@ -4,8 +4,10 @@
 uniform float uTime;
 uniform vec2 uMouse;
 uniform vec2 uResolution;
+uniform vec2 uRawImageSize;
 uniform float uAlpha;
 uniform float uBinScale;
+uniform float uDisplayYShift;
 uniform float uMagnification;
 uniform sampler2DRect tex0;
 
@@ -63,7 +65,7 @@ void main(){
     if ( leftDist < eyeRad || rightDist < eyeRad){
 
         float magnification = 2.0;
-        vec2 rawImgRes = vec2(4912, 2763);
+        vec2 rawImgRes = uRawImageSize; //vec2(4912, 2763);
 
         vec2 eyeCenterNorm = eyeCenter / uResolution;
         vec2 eyeCenterNormInvY = invY(eyeCenterNorm);

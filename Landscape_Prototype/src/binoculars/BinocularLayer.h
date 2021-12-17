@@ -17,7 +17,7 @@ public:
 	void setTexture(ofTexture tex) { mBgTex = tex; }
 	void setShowing(bool show);
 	void setGui(shared_ptr<Gui> gui) { mGui = gui; }
-
+	void setRawImageSize(float x, float y) { mRawImgSize.set(x, y); }
 	void setMagnification(float mag) { mMagTarget = mag; }
 
 private:
@@ -25,7 +25,7 @@ private:
 	ofxAutoReloadedShader shader;
 
 
-	ofVec2f mPosition, mTargetPos;
+	ofVec2f mPosition, mTargetPos, mRawImgSize;
 
 	shared_ptr<Gui> mGui;
 

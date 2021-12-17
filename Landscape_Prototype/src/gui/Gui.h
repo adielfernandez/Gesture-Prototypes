@@ -35,6 +35,8 @@ public:
 	ofxFloatSlider binRightBinX;
 
 	ofxFloatSlider binScale;
+	ofxFloatSlider binPosY;
+	ofxFloatSlider binDisplayYShift;
 
 	//ofxLabel shaderLabel;
 	//ofxIntSlider fogLayers;
